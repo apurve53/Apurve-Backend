@@ -1,0 +1,2 @@
+submittedQueries = [];
+module.exports = submittedQueries;

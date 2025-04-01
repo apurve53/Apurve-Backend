@@ -1,0 +1,27 @@
+@media only screen and (max-width: 510px) {
+    body {
+        display: block;
+        height: 100%;
+    }
+
+    .navbar {
+        position: sticky;
+        top: 0px;
+        display: block;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    #sidebar {
+        width: 0%;
+        display: block;
+        position: sticky;
+        z-index: 0;
+    }
+
+    #content {
+        position: absolute;
+        top: 0px;
+    }
+
+}

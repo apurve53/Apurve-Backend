@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>File Operations</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://code.jquery.com/; style-src 'self'; img-src 'self';" />
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self';"> -->
+    <link rel="stylesheet" type="text/css" href="admin.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+
+</head>
+
+<body>
+    <div class="admintopbar">
+        <span id="changpass">Change Password</span>
+        <span id="lgout">Log Out</span>
+    </div>
+    <div class="operations" id="operations">
+        <button id="operation1Btn">All Music</button>
+        <button id="operation2Btn">All Users</button>
+        <button id="operation3Btn">Create User</button>
+        <button id="operation4Btn">Querys</button>
+        <button id="operation5Btn">Claim Release</button>
+        <button id="operation6Btn">Payment</button>
+        <button id="operation7Btn">Edit Users</button>
+        <button id="operation8Btn">YouTube Content Id Request</button>
+        <button id="operation9Btn">YouTube OAC</button>
+    </div>
+
+    <div class="navbar">
+        <button id="togglesidebar" class="sidebar-toggle">☰</button>
+        <span class="title">Your Page Title</span>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebaroperations" id="sidebaroperations">
+            <button id="soperation1Btn">All Music</button>
+            <button id="soperation2Btn">All Users</button>
+            <button id="soperation3Btn">Create User</button>
+            <button id="soperation4Btn">Querys</button>
+            <button id="soperation5Btn">Claim Release</button>
+            <button id="soperation6Btn">Payment</button>
+            <button id="soperation7Btn">Edit Users</button>
+            <button id="soperation8Btn">YouTube Content Id Request</button>
+            <button id="soperation9Btn">YouTube OAC</button>
+        </div>
+    </div>
+    <div class="middle">
+        <div id="operation1Content" class="display-off">
+        </div>
+        <div id="operation2Content" class="display-off">
+        </div>
+        <div id="operation3Content" class="display-off">
+            <h2>User Information Form</h2>
+            <form id="userForm" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <td><label for="name">Name:</label></td>
+                        <td><input type="text" id="name" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email">Email:</label></td>
+                        <td><input type="email" id="email" name="username" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="phone">Phone Number:</label></td>
+                        <td><input type="tel" id="phone" name="phone"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="address">Address:</label></td>
+                        <td><input type="text" id="address" name="address"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Generated Password:</label></td>
+                        <td><input type="text" id="password" name="password" readonly>
+                            <button id="generatePassword" type="button">Generate Password</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="servilabel"><label>Services:</label></td>
+                        <td id="options">
+                        </td>
+                        <td class="ytservicelabel"><label>Youtube Services:</label></td>
+                        <td id="ytoptions">
+                        </td>
+                    </tr>
+                    <tr class="submitbtntr">
+                        <td class="submitbtn" colspan="4">
+                            <input type="submit" value="Create User">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="operation4Content" class="display-off">
+        </div>
+        <div id="operation5Content" class="display-off">
+        </div>
+        <div id="operation6Content" class="display-off">
+            <div>
+                <input type="text" id="searchInput" placeholder="Search...">
+                <button onclick="search()">Search</button>
+            </div>
+            <div id="paymentshow">
+            </div>
+        </div>
+        <div id="operation7Content" class="display-off">
+            <div id="usereditarea">
+
+            </div>
+        </div>
+        <div id="operation8Content" class="display-off">
+
+        </div>
+        <div id="operation9Content" class="display-off">
+
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

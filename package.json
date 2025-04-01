@@ -1,0 +1,33 @@
+{
+  "name": "apurve-backend",
+  "version": "1.0.0",
+  "description": "This is Completely new Server for my Website With node Express here I will try to put all my past work together to show on the worlddevelopment.in",
+  "main": "server.js",
+  "scripts": {
+    "test": "run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apurve53/Apurve-Backend.git"
+  },
+  "author": "Apurve Srivastava",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apurve53/Apurve-Backend/issues"
+  },
+  "homepage": "https://github.com/apurve53/Apurve-Backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.18.1",
+    "i": "^0.3.7",
+    "mongodb": "^6.15.0",
+    "npm": "^11.2.0",
+    "socket.io": "^4.8.1"
+  }
+}

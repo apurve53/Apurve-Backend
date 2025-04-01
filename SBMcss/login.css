@@ -1,0 +1,224 @@
+body {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-image: url('img2.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 20px;
+  position: relative;
+  /* Required for absolute positioning within */
+}
+
+.displayoff {
+  display: none;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 20px;
+  background-color: rgba(99, 60, 53, 0.2);
+  box-shadow: 2px 4px 6px rgba(112, 80, 80, 0.1);
+  color: white;
+  z-index: 1;
+  border: 1px;
+  border-radius: 4px;
+  width: 100%;
+  text-align: right;
+}
+
+.header-buttons {
+  position: absolute;
+  top: 52px;
+  left: 30%;
+}
+
+.header button {
+  background-color: rgba(99, 60, 53);
+  color: #fff;
+  width: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 100px;
+}
+
+@keyframes movement-container {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: movement-container 1s ease-in-out;
+  /* Adjust duration and timing function as needed */
+}
+
+.login-container h2 {
+  color: #333;
+  font-weight: 800;
+}
+
+.query-container {
+  position: fixed;
+  left: 40%;
+  top: 40%;
+  padding: 20px;
+  background-color: rgba(255, 255, 255);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: rgb(19, 17, 17);
+  border: 1px;
+  border-radius: 4px;
+  animation: movement-container 1s ease-in-out;
+  /* Adjust duration and timing function as needed */
+}
+
+.query-container input[type="text"],
+.query-container input[type="file"],
+.query-container input[type="email"] {
+  margin-bottom: 10px;
+  margin-top: -14px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: -14px;
+}
+
+.query-container label {
+  margin: 0px;
+  padding: 0px;
+  font-weight: 600;
+}
+
+.login-container form,
+.query-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#submitbtn {
+  background-color: #007bff;
+  color: #131111;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bolder;
+}
+
+input[type="submit"] {
+  background-color: #007bff;
+  color: #131111;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+  cursor: pointer;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    overflow-y: scroll;
+    height: auto;
+    background-image: none;
+  }
+
+  .header h1,
+  .header p {
+    display: none;
+  }
+
+  .header button {
+    margin-bottom: 20px;
+    height: 60px;
+    background-color: #007bff;
+  }
+
+  .login-container {
+    position: absolute;
+    top: 400px;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+
+  .query-container {
+    position: absolute;
+    top: 300px;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+
+  .query-container input[type="text"],
+  .query-container input[type="file"],
+  .query-container input[type="email"] {
+    width: 90%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  input[type="submit"] {
+    padding: 20px 10px 20px 10px;
+  }
+
+  textarea {
+    width: 90%;
+  }
+
+  #submitbtn {
+    padding: 20px 10px 20px 10px;
+  }
+
+  .login-container input[type="text"],
+  .login-container input[type="password"] {
+    width: 90%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .login-container form,
+  .query-container form {
+    width: 90%;
+    margin: 10px 0px 10px 0px;
+  }
+}

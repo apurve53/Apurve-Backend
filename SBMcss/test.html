@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/test.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="sidebar">
+        <div id="user-info">
+            <img id="profilepic" src="profile-picture.jpg" alt="User Profile Picture">
+            <form id="profilepicform" class="display-off" method="POST" enctype="multipart/form-data">
+                <input type="file" id="fileInput" accept="image/*" name="profile">
+                <input type="submit" id="submitbtn" value="Upload File">
+            </form>
+            <button class="edit-button" id="editbuton">
+                ✎
+            </button>
+            <h3 id="artistname">Abhilav Srivastava</h3>
+        </div>
+        <ul id="servicearea" class="servicearea">
+
+            <li class="services"><a id="New Release" href="#New Release">New Release</a></li>
+            <li class="services selected"><a id="Catalogue" href="#Catalogue">Catalogue</a></li>
+            <li class="services"><a id="Payment" href="#Payment">Payment</a></li>
+            <li class="services"><a href="#YouTobe Service">YouTube Services</a></li>
+            <div class="ytservicecontainer display-off" id="dropdown">
+                <li class="ytservice"><a id="Claim Release" href="#Claim Release">Claim Release</a></li>
+                <li class="ytservice"><a id="Cntent ID Request" href="#Cntent ID Request">Cntent ID Request</a></li>
+                <li class="ytservice"><a id="Artist channel Request" href="#Artist channel Request">Artist channel
+                        Request</a></li>
+            </div>
+        </ul>
+    </div>
+</body>
+
+</html>

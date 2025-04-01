@@ -1,0 +1,242 @@
+body {
+    font-style: oblique;
+    background-color: #f0f0f0;
+}
+
+header {
+    color: black;
+    background-color: #f0f0f0;
+    padding: 60px 0;
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 20px;
+}
+
+header h1 {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+header p {
+    font-size: 20px;
+    font-weight: 100;
+    margin-top: 10px;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 20px 0 20px;
+    max-width: 900px;
+}
+
+section {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.features {
+    background-color: #f0f0f0;
+    color: #000000;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-height: 50%;
+}
+
+button {
+    color: #f0f0f0;
+    font-size: 20px;
+    margin-bottom: 10px;
+    height: 40px;
+    background-color: #1c7097;
+    width: 20%;
+    font-style: oblique;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.loginform {
+    display: flex;
+    flex-direction: column;
+    background: #f0f0f0;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    animation: movement-container 0.5s ease-in-out;
+}
+
+.queryform {
+    display: flex;
+    flex-direction: column;
+    background: #f0f0f0;
+    align-items: start;
+    justify-content: center;
+    margin-top: 50px;
+    overflow-y: scroll;
+    animation: movement-container 0.5s ease-in-out;
+}
+
+.queryform input {
+    margin: 0px;
+}
+
+.queryform label {
+    margin: 0px;
+    padding: 0px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    margin: 0px;
+    padding: 0px;
+    align-items: center;
+}
+
+input,
+textarea {
+    border-radius: 5px;
+}
+
+input[type="email"],
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+    width: 20%;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 2px 3px #00000030;
+    border: none;
+}
+
+input[type="submit"] {
+    color: #f0f0f0;
+    font-size: 20px;
+    margin-bottom: 10px;
+    height: 40px;
+    background-color: #1c7097;
+    width: 20%;
+    font-style: oblique;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 20%;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 2px 3px #00000030;
+    border: none;
+    overflow: auto;
+}
+
+footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background: #353535;
+    padding: 20px 0;
+    text-align: center;
+    color: #868686;
+    margin-top: 100px;
+    font-size: 12px;
+}
+
+footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+footer li {
+    display: inline-block;
+}
+
+footer li a {
+    padding: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #c3c3c3;
+}
+
+footer li a:hover {
+    color: white;
+}
+
+.displayoff {
+    display: none;
+}
+
+@keyframes movement-container {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    header {
+        color: #ffffff;
+        background-color: #284b63;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 30px;
+        padding: 0;
+        margin: 0;
+    }
+
+    header p {
+        font-size: 18px;
+        font-weight: 100;
+    }
+
+    button {
+        width: 50%;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+        width: 70%;
+    }
+
+    input[type="submit"] {
+        color: #f0f0f0;
+        font-size: 20px;
+        margin-bottom: 10px;
+        height: 40px;
+        background-color: #1c7097;
+        width: 50%;
+        font-style: oblique;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    label {
+        margin: -10px;
+        padding: 0px;
+        font-size: 15px;
+    }
+
+    textarea {
+        width: 70%;
+    }
+
+    .queryform input {
+        margin: 0px;
+    }
+
+    footer {
+        display: none;
+    }
+}

@@ -1,0 +1,206 @@
+@media only screen and (max-width: 510px) {
+    body {
+        display: block;
+        background-color: #fff;
+        height: 100vh;
+    }
+
+    .sidebar-toggle {
+        font-size: 24px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: #fff;
+    }
+
+    .navbar {
+        display: flex;
+        position: sticky;
+        top: 0px;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        justify-content: space-between;
+    }
+
+    .crossButton {
+        margin-top: 0px;
+        margin-right: -7px;
+    }
+
+    #sidebar {
+        display: block;
+        position: sticky;
+        top: 56px;
+        z-index: 1;
+        width: 0%;
+        height: 100%;
+        left: 0;
+        padding: 0;
+        align-items: start;
+        margin-top: 0;
+        transition: width 0.6s;
+        background-color: #333;
+    }
+
+    #sidebar.open {
+        width: 50%;
+    }
+
+    #user-info {
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        padding-bottom: 20px;
+    }
+
+    .servicearea {
+        display: block;
+    }
+
+    .servicearea a {
+        color: white;
+    }
+
+    .ytservicecontainer {
+        background: none;
+    }
+
+    .ytservice {
+        padding: 0px;
+        cursor: pointer;
+        box-shadow: 0px 1px 4px 0px black;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        color: white;
+    }
+
+    .services {
+        padding: 0px;
+        cursor: pointer;
+        box-shadow: 0px 1px 4px 0px black;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        color: whitesmoke;
+    }
+
+    .servicelogout {
+        color: rgb(209 199 199);
+    }
+
+    #content {
+        display: block;
+        position: absolute;
+        top: 67px;
+        width: 100%;
+        padding: 0 10px 20px 10px;
+        margin: 0;
+        background-color: white;
+        /* height: 100%; */
+    }
+
+    .slidtitle {
+        position: relative;
+    }
+
+    #section3-content {
+        padding: 10px 0 0 0;
+        margin: 0;
+        border-radius: 0;
+        width: 100%;
+        box-shadow: none;
+    }
+
+    #lgout {
+        display: none;
+    }
+
+    #linkdiv {
+        padding: 0px;
+        border-radius: 0px;
+        border: none;
+        background-color: #ffffff;
+    }
+
+    #clamerelese {
+        margin-top: 20px;
+        background-color: rgb(222, 220, 220);
+        padding-bottom: 10px;
+        padding: 10px 0;
+        border-radius: 0px;
+    }
+
+    #clamerelese ol {
+        padding: 0 0 0 10px;
+    }
+
+    .statusarea {
+        margin-right: 5px;
+        align-items: center;
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        color: #01080a;
+        font-size: 13px;
+        font-weight: 500;
+        min-width: 123px;
+        border: none;
+    }
+
+    .atag {
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+        overflow: hidden;
+        max-width: 500px;
+        white-space: nowrap;
+    }
+
+    .formtable {
+        display: block;
+        grid-template-columns: auto;
+        justify-content: center;
+        padding-left: 30px;
+    }
+
+    .formtable div {
+        flex: 1;
+        flex-direction: column;
+        justify-content: left;
+        margin-right: 10px;
+    }
+
+    .filediv {
+        border-radius: 0px;
+        margin: 0;
+        padding: 0;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-gap: 20px;
+        box-shadow: none;
+        border: none;
+    }
+
+    .card {
+        width: 100%;
+        padding: 0px;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .uploadbtn input {
+        margin-top: 56px;
+        margin: 80px;
+    }
+
+
+}

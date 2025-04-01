@@ -1,0 +1,150 @@
+@media only screen and (max-width: 510px) {
+    #size {
+        z-index: 5;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ytservicecontainer {
+        position: absolute;
+        right: 0;
+        top: 46px;
+        align-items: end;
+    }
+
+    .formtable {
+        display: block;
+        grid-template-columns: auto;
+        justify-content: center;
+        padding-left: 30px;
+    }
+
+    .formtable div {
+        flex: 1;
+        flex-direction: column;
+        justify-content: left;
+        margin-right: 10px;
+        /* Adjust margin as needed */
+    }
+
+    #section3-content {
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    #sidebar {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+
+    #servicearea {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        list-style-type: none;
+        padding: 0 10px 0 10px;
+        top: 168px;
+        position: absolute;
+        z-index: 3;
+        flex-direction: row;
+    }
+
+    #servicearea li {
+        position: relative;
+    }
+
+    #servicearea img {
+        display: unset;
+    }
+
+    #user-info {
+        width: 100%;
+        height: fit-content;
+        padding: 20px;
+        margin-bottom: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    .services {
+        display: none;
+    }
+
+    .filediv {
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-gap: 20px;
+    }
+
+    .display-gride {
+        display: grid;
+    }
+
+    .display-block {
+        display: block;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .status {
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .card h3 {
+        font-size: 14px;
+    }
+
+    #content {
+        position: absolute;
+        width: 100%;
+        top: 230px;
+        z-index: 1;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .slidtitle {
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        margin-bottom: 0px;
+    }
+
+    .slidtitle span {
+        font-size: 20px;
+        font-weight: 400;
+        height: auto;
+        padding: 0;
+        position: fixed;
+        top: 10px;
+        right: 53px;
+    }
+}

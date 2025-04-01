@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';" />
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="newLogin.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>SBM Digital Music Distribution</h1>
+            <p>Release your music on all major streaming platforms and music stores for free</p>
+        </div>
+    </header>
+    <section class="features">
+        <div class="header-buttons">
+            <button id="loginbtn" class="button">Log in</button>
+            <button id="querybtn" class="button">Submit a Query</button>
+        </div>
+        <div id="loginfrm" class="loginform displayoff">
+            <h2>Login</h2>
+            <form action="/sbm_login" method="post">
+                <input type="email" id="username" name="username" placeholder="Username Ex: example@somthing.com"
+                    required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button id="submitbtn" type="submit">Login</button>
+            </form>
+        </div>
+        <div id="queryfrm" class="queryform ">
+            <form id="queryform" action="/submit_query" method="post">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email"><br>
+
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name"><br>
+
+                <label for="query">Query:</label><br>
+                <textarea id="query" name="query" rows="4" cols="50"></textarea><br>
+
+                <label for="file">Upload a file:</label><br>
+                <input type="file" id="file" name="queryfile"><br>
+
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </section>
+    <footer>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contacts</a></li>
+        </ul>
+        <p>&copy; All rights reserved.</p>
+    </footer>
+</body>
+<script src="login.js"></script>
+
+</html>
