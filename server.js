@@ -39,12 +39,12 @@ getOrigins().then((originList) => {
         next();
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
-    app.get('/', (req, res) => {
-        res.redirect('http://localhost:5173/');
-    })
+    app.use(express.static(__dirname + '/dist'));
+    // app.get('/', (req, res) => {
+    // res.redirect('http://localhost:5173/');
+    // })
 
     app.post('/checksesstion', (req, res) => {
-
         try {
             if (!req.session.userDetails) {
                 req.session.userDetails = { authanticated: false, applications: [], user: "new user" };
@@ -336,8 +336,16 @@ getOrigins().then((originList) => {
     app.post("/adminchangepassword", controller.adminChangePassword);
 
     //////////////////////////////////////////// SBM Digital API Starts ///////////////////////////////////////
+
+    /////////////////////////////////////////// Kannan View API Starts ///////////////////////////////////////
+    app.use(express.static(__dirname + "/kan-ban build"));
+    app.get('/kanban', (req, res) => {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.sendFile(__dirname + '/kan-ban build/index.html');
+    })
+
     server.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}/sbm_home`);
+        console.log(`Server is running on http://localhost:${port}`);
     });
 });
 
