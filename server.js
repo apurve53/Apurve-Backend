@@ -10,7 +10,6 @@ const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAl
 require('dotenv').config();
 getOrigins().then((originList) => {
     const app = express();
-    const port = 3000;
     const corsOptions = {
         origin: originList,
         credentials: true,
@@ -94,6 +93,7 @@ getOrigins().then((originList) => {
             const { username, password } = req.body;
             if (req.session.userDetails.authanticated === false) {
                 const userStatus = await findUser(username, password);
+                console.log("userStatus : ", userStatus);
                 if (!userStatus.user) {
                     res.status(402);
                 } else {
@@ -344,8 +344,14 @@ getOrigins().then((originList) => {
         res.sendFile(__dirname + '/kan-ban build/index.html');
     })
 
-    server.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
+    app.get('*', (req, res) => {
+        console.log("this is * route : ", req.hostname);
+        res.redirect('http://worlddevelopment.in');
+
+    })
+    const localAddress = require('./osModule');
+    const port = 80;
+    server.listen(port, localAddress.setAddress(), "192.168.1.10", () => {
+        console.log(`Server is running on http://${localAddress.setAddress()}:${port}`);
     });
 });
-
