@@ -2,7 +2,7 @@ const ExcelJS = require("exceljs");
 // Load the existing workbook
 const workbook = new ExcelJS.Workbook();
 const fs = require("fs");
-const filePath = __dirname + '\\data.xlsx';
+const filePath = __dirname + '/SBM/data.xlsx';
 let cellNumber = 1;
 let clameNumber = 1;
 const newUser = function (userData) {

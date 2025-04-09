@@ -7,7 +7,8 @@ const logedInUsers = require("./getLogedInAllUsers.js");
 const app = require("./server.js");
 const createdUsers = require("./createduser.js");
 const submittedQueries = require("./quries.js");
-let restractedUsers = new Map();
+const restractedUsers = new Map();
+const { insertDocument, updateData, deleteData, } = require("./dbwork.js");
 const allOptions = ["New Release", "Catalogue", "Payment"];
 const ytOptions = ["Claim Release", "Cntent ID Request", "Artist channel Request"];
 const yelloCell = ["A", "B", "C", "D", "E", "F", "G", "H", "N", "O", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE"];
@@ -21,26 +22,24 @@ const sendLandingPage = async (req, res) => {
   res.sendFile(__dirname + "//login.html");
 };
 const userLogin = (req, res) => {
-  console.log("req.session : ", req.session);
   res.setHeader("Cache-Control", "public, max-age=0");
-  console.log("reqsession : ", req.session);
   if (createdUsers.has(req.body.username)) {
     if (createdUsers.get(req.body.username).password === req.body.password) {
       if (req.body.password === adminPassword) {
         logedInUsers.set(req.body.username, { time: Date.now(), session: 1 });
-        res.sendFile(__dirname + "//SBM//admin.html");
+        res.sendFile(__dirname + "/SBM/admin.html");
       } else {
         logedInUsers.set(req.body.username, { time: Date.now(), session: 1 });
-        dbWork.insertDocument({
-          db: "artist",
-          collection: "creds",
-          opration: "insert",
-          document: {
-            username: req.body.username,
-            password: req.body.password,
-          },
-        });
-        res.sendFile(__dirname + "//newArtist.html");
+        // insertDocument({
+        //   db: "artist",
+        //   collection: "creds",
+        //   opration: "insert",
+        //   document: {
+        //     username: req.body.username,
+        //     password: req.body.password,
+        //   },
+        // });
+        res.sendFile(__dirname + "/SBM/newArtist.html");
       }
     } else {
       res.send("password is wrong");
@@ -78,7 +77,7 @@ const sendAllClameReleseToAdmin = async (req, res) => {
     res.status(401);
   }
 };
-const artistAllClameRelese = async (req, res) => {
+const artistAllClameRelese = async (req, res) => { //checked
   res.setHeader('Cache-Control', 'public, max-age=0');
   let allClameRelese = [];
   if (createdUsers.has(req.body.user)) {
@@ -106,7 +105,7 @@ const updateClameReleseStatus = (req, res) => {
     res.status(401).send("Unautherised");
   }
 };
-const artistClameRelese = async (req, res) => {
+const artistClameRelese = async (req, res) => { //checked
   res.setHeader('Cache-Control', 'public, max-age=0');
   try {
     let reqBody = req.body;
@@ -128,7 +127,7 @@ const submitQuery = async (req, res) => {
   if (req.files) {
     const uploadedFile = req.files.queryfile;
     query.fileName = uploadedFile.name;
-    uploadedFile.mv(__dirname + "/uploads/" + uploadedFile.name).then(() => { });
+    uploadedFile.mv(__dirname + "/SBMuploads/" + uploadedFile.name).then(() => { });
     // //console.log("File submitted : " + req.files.queryfile);
   } else {
     query.fileName = null;
@@ -228,28 +227,22 @@ const artistFilesUploadsWithDetails = async (req, res) => {
       let sonngName = uploadedMusic.name;
       let lastIndex = sonngName.lastIndexOf(".")
       let extention = sonngName.substring(lastIndex, sonngName.length);
-      console.log("file Name :", req.body["song title"]);
-      console.log("File Extention :", extention);
-      console.log("uploadedMusic.length : ", uploadedMusic.length);
       if (uploadedMusic.length === undefined) {
         let fileObject = {};
         let uploadedFileDetails = req.body;
 
         let fileNameToUpload = `${req.body["song title"]}${extention}`
-        console.log("request File :", fileNameToUpload);
 
-        uploadedMusic.mv(__dirname + "/uploads/" + fileNameToUpload).then(() => {
-          uploadedFile.mv(__dirname + "/uploads/" + uploadedFile.name).then(() => {
+        uploadedMusic.mv(__dirname + "/SBMuploads/" + fileNameToUpload).then(() => {
+          uploadedFile.mv(__dirname + "/SBMuploads/" + uploadedFile.name).then(() => {
             fileObject["audio"] = fileNameToUpload;
             fileObject["img"] = uploadedFile.name;
             fileObject["status"] = "Submitted";
             fileObject["artist"] = req.body["ARTIST/Singer"];
-            console.table(fileObject);
             createdUsers.get(req.body.user).filelist.push(fileObject);
             uploadedFileDetails.SONG = req.body["song title"];
             uploadedFileDetails["Film Banner"] = uploadedFile.name;
             let isuploaded = setUploadedMusicToUpload(uploadedFileDetails);
-            // uploadedMusicList.set(uploadedMusic.name, uploadedFileDetails);
             if (isuploaded) {
               res.status(201).send({ message: "File is uploaded succesfull" });
             } else {
@@ -258,7 +251,7 @@ const artistFilesUploadsWithDetails = async (req, res) => {
           });
         });
       } else {
-        uploadedFile.mv(__dirname + "/uploads/" + uploadedFile.name).then(() => { });
+        uploadedFile.mv(__dirname + "/SBMuploads/" + uploadedFile.name).then(() => { });
         for (let i = 0; i < uploadedMusic.length; i++) {
           let fileObject = {};
           let uploadedFileDetails = { ...req.body };
@@ -272,11 +265,11 @@ const artistFilesUploadsWithDetails = async (req, res) => {
           uploadedFileDetails["SONG"] = fileForUpload.name;
           uploadedMusicList.set(fileForUpload.name, uploadedFileDetails);
           if (i === uploadedMusic.length - 1) {
-            fileForUpload.mv(__dirname + "/uploads/" + fileForUpload.name).then(() => {
+            fileForUpload.mv(__dirname + "/SBMuploads/" + fileForUpload.name).then(() => {
               res.status(201).send({ message: "Files are uploaded succesfull!!" });
             });
           } else {
-            fileForUpload.mv(__dirname + "/uploads/" + fileForUpload.name).then(() => { });
+            fileForUpload.mv(__dirname + "/SBMuploads/" + fileForUpload.name).then(() => { });
           }
         }
       }
@@ -335,7 +328,6 @@ function setUploadedMusicToUpload(detailObject) {
 }
 
 function formateDate(date) {
-  console.log("Recived Dae Is :", date);
   let dateObject = new Date(date);
   if (!isNaN(dateObject.getTime())) {
     // Format the date as MM-DD-YYYY
@@ -470,12 +462,12 @@ const setNewAmountToArtist = (req, res) => {
   }
   if (req.files != null) {
     let uploadedFile = req.files.excelfile;
-    uploadedFile.mv(__dirname + "/SBM/uploads/" + uploadedFile.name).then(() => { });
+    uploadedFile.mv(__dirname + "SBMuploads/" + uploadedFile.name).then(() => { });
   }
   res.status(201).end();
 };
 
-const allPaymentForUser = (req, res) => {
+const allPaymentForUser = (req, res) => {  //checked
   res.setHeader('Cache-Control', 'public, max-age=31536000');
   const paymentMap = createdUsers.get(req.body.user).payment;
   let paymentkeys = Array.from(paymentMap.keys());
@@ -631,12 +623,12 @@ const createOac = (req, res) => {
 
   if (logedInUsers.has(req.body.user)) {
     let user = createdUsers.get(req.body.user);
-    dbWork.insertDocument({
-      db: "artist",
-      collection: "artist_channel_request",
-      opration: "insert",
-      document: req.body,
-    });
+    // insertDocument({
+    //   db: "artist",
+    //   collection: "artist_channel_request",
+    //   opration: "insert",
+    //   document: req.body,
+    // });
     user.youtubeoac.push(req.body);
     res.status(201).send("Your Request has been updated");
   } else {
@@ -658,28 +650,29 @@ const removeoac = (req, res) => {
 };
 const profilepicUpload = (req, res) => {
   res.setHeader("Cache-Control", "public, max-age=0");
-
   if (logedInUsers.has(req.body.user)) {
     let profilePicture = req.files.profile;
     console.log("profilePicture : ", profilePicture);
-    profilePicture
-      .mv(__dirname + "/uploads/profilepicture/" + profilePicture.name)
-      .then(() => {
-        console.log("profile Pic");
-        if (createdUsers.get(req.body.user).profilepic !== "") {
-          helper.deleteOldProfilePicture(
-            createdUsers.get(req.body.user).profilepic
-          );
-        }
-        dbWork.updateData({
-          db: "artist",
-          collection: "user",
-          opration: "update",
-          filter: { username: req.body.user },
-          update: { profilepic: profilePicture.name },
-        });
-        createdUsers.get(req.body.user).profilepic = profilePicture.name;
-      });
+    let uploadPath = __dirname + "/SBMuploads/profilepicture/" + profilePicture.name;
+    console.log("Upload Path : ", uploadPath);
+    profilePicture.mv(uploadPath).then(() => {
+      console.log("profile Pic Uploadedd Successfully");
+      if (createdUsers.get(req.body.user).profilepic !== "") {
+        helper.deleteOldProfilePicture(
+          createdUsers.get(req.body.user).profilepic
+        );
+      }
+      // updateData({
+      //   db: "artist",
+      //   collection: "user",
+      //   opration: "update",
+      //   filter: { username: req.body.user },
+      //   update: { profilepic: profilePicture.name },
+      // });
+      createdUsers.get(req.body.user).profilepic = profilePicture.name;
+    }).catch((err) => {
+      console.log("Error in Profile Pic Upload : ", err);
+    });
     res.status(201).send("Uploaded Succssfull");
   } else {
     res.status(401).end();
@@ -690,10 +683,10 @@ const deleteUser = (req, res) => {
   if (req.body.user === "admin@gmail.com") {
     let opration = createdUsers.delete(req.body.relateduser);
     if (opration) {
-      dbWork.deleteData({
-        collection: "user",
-        filter: { username: req.body.relateduser },
-      });
+      // deleteData({
+      //   collection: "user",
+      //   filter: { username: req.body.relateduser },
+      // });
       res.status(201).end();
     } else {
       res.status("401").end();
@@ -763,7 +756,7 @@ const downloadPaymentDetail = async (req, res) => {
     if (fileName !== "") {
       const selectListWorkBook = new ExcelJS.Workbook();
       await selectListWorkBook.xlsx.readFile(
-        __dirname + "/uploads/" + fileName
+        __dirname + "/SBMuploads/" + fileName
       );
       selectListWorkBook.xlsx
         .writeBuffer()

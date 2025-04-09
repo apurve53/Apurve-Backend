@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';" />
+    <title>Your Professional Landing Page</title>
+    <link rel="stylesheet" type="text/css" href="newArtist.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <!-- <link rel="stylesheet" type="text/css" href="artistMobilelast.css"> -->
+    <link rel="stylesheet" type="text/css" href="mobileartist.css">
+</head>
+
+<body>
+    <div id="loader" class="display-off"></div>
+    <div class="navbar">
+        <button id="togglesidebar" class="sidebar-toggle">☰</button>
+        <span id="mobiletitle" class="title">SBM Digital Music Distribution</span>
+    </div>
+    <div id="sidebar">
+        <div id="user-info">
+            <img id="profilepic" class="" src="profile-picture.jpg" alt="User Profile Picture">
+            <form id="profilepicform" class="display-off" method="POST" enctype="multipart/form-data">
+                <input type="file" id="fileInput" accept="image/*" name="profile">
+                <input type="submit" id="submitbtn" value="Upload File">
+            </form>
+            <button class="edit-button" id="editbuton">
+                ✎
+            </button>
+            <h3 id="artistname" class="">User Name</h3>
+        </div>
+        <ul id="servicearea" class="servicearea">
+
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="slidheader" class="slidtitle">
+            <div id="headerdiv">
+                <h2 id="header"></h2>
+            </div>
+            <span id="lgout">Log Out</span>
+        </div>
+        <div id="section3-content">
+            <div class="filediv" id="filediv">
+            </div>
+            <div id="linkdiv" class="linkdiv">
+                <label class="urltxt" urltxt for="linkInput">URL</label>
+                <input type="url" id="linkInput" placeholder="Enter link">
+                <button id="linkSubmit">Submit</button>
+                <div id="clamerelese">
+                </div>
+            </div>
+
+            <div class="paymentdiv" id="paymentdiv">
+
+            </div>
+
+            <form id="useruploadform" class="display-off uploadform" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="username" name="user">
+                <div class="formtable">
+                    <div>
+                        <label for="song title">Song Title</label>
+                        <br>
+                        <input required type="text" name="song title">
+                    </div>
+                    <div>
+                        <label for="FILM/ALBUM">FILM/ALBUM</label>
+                        <br>
+                        <input required type="text" name="FILM/ALBUM">
+                    </div>
+                    <div>
+                        <label for="ARTIST/Singer">ARTIST/Singer</label>
+                        <br>
+                        <input required type="text" name="ARTIST/Singer">
+                    </div>
+                    <div>
+                        <label for="LABEL">LABEL</label>
+                        <br>
+                        <input required type="text" name="LABEL">
+                    </div>
+                    <div>
+                        <label for="ALBUM CATEGORY">ALBUM CATEGORY</label>
+                        <br>
+                        <select name="ALBUM CATEGORY" title="ALBUM CATEGORY">
+                            <option disabled selected value=""></option>
+                            <option value="Movie">Movie</option>
+                            <option value="Album">Album</option>
+                            <option value="Solo">Solo</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="LYRICIST">Lyricist</label>
+                        <br>
+                        <input required type="text" placeholder="" name="LYRICIST">
+                    </div>
+                    <div>
+                        <label for="composerName">Composer</label>
+                        <br>
+                        <input required type="text" name="composerName" placeholder="">
+                    </div>
+                    <div>
+                        <label for="Star cast">Star cast</label>
+                        <br>
+                        <input required type="text" name="Star cast" placeholder="">
+                    </div>
+                    <div>
+                        <label for="Director">Director Name</label>
+                        <br>
+                        <input required type="text" name="Director">
+                    </div>
+                    <div>
+                        <label for="Producer">Producer</label>
+                        <br>
+                        <input required type="text" name="Producer">
+                    </div>
+                    <div>
+                        <label for="Publisher">Publisher</label>
+                        <br>
+                        <input required type="text" name="Publisher">
+                    </div>
+                    <div>
+                        IPRS Ownership<br> <input required type="checkbox" id="ownershipyess"
+                            name="IPRS"><label>Yes</label>
+                    </div>
+                    <div>
+                        <label for="ISRC">ISRC</label>
+                        <br>
+                        <input required type="text" name="ISRC">
+                    </div>
+                    <div>
+                        <label for="DATE OF MUSIC RELEASE">Music Release Date </label>
+                        <br>
+                        <input required type="date" placeholder="MM-DD-YYYY" id="releaseDate"
+                            name="DATE OF MUSIC RELEASE" min="2023-11-28">
+                    </div>
+                    <div>
+                        <label for="Description">Description</label>
+                        <br>
+                        <textarea required name="Description" rows="1" cols="20"></textarea>
+                    </div>
+                    <div>
+                        <label for="language">Language </label>
+                        <br>
+                        <select id="language" name="language">
+                            <option disabled selected value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="GENRE/ Category">GENRE/ Category </label>
+                        <br>
+                        <select id="genre" name="GENRE/ Category">
+                            <option disabled selected value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="Sub Category">Sub Category </label>
+                        <br>
+                        <select id="subgenre" name="Sub Category">
+                            <option disabled selected value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="Mood">Mood</label>
+                        <br>
+                        <select id="mood" name="Mood">
+                            <option disabled selected value=""></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="CRBT title">CRBT Title </label>
+                        <br>
+                        <input type="text" name="CRBT title">
+                    </div>
+                    <div>
+                        <label for="CRBT CUTS">CRBT Start Time </label>
+                        <br>
+                        <input type="text" id="timeInput" name="CRBT CUTS" maxlength="8" placeholder="HH:MM:SS">
+                    </div>
+
+                </div>
+                <div>
+                    <div class="display-off">
+                        <input required type="file" id="musicfile" name="songname">
+                    </div>
+                    <div id="musicfilelbl" class="fileinputes">
+                        <label id="upmusic" for="songname">Drop yoour Music File Or Click to Upload </label>
+                        <br>
+                        <br><span id="uploadguide" class="upload-guide">No Music File is Selected</span>
+                    </div>
+                    <div class="display-off">
+                        <input required id="imageinput" type="file" name="imagename">
+                    </div>
+                    <div id="imagefilelbl" class="fileinputes">
+                        <label id="upimage" for="imagename">Drop an Image hear or Click to Upload</label>
+                        <br>
+                        <br>
+                        <span class="upload-guide" id="imguploadguid">No Image File is selected</span>
+                    </div>
+                    <div class="uploadbtn">
+                        <input type="submit" id="uploadbtn" value="Upload File">
+                    </div>
+                </div>
+            </form>
+
+            <div id="contentidreq" class="display-off">
+            </div>
+
+            <div id="artistchannelreq" class=" artchareq display-off">
+                this is artistchannelreq
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js for Bootstrap components -->
+    <script src="newArtist.js"></script>
+
+</body>
+
+</html>

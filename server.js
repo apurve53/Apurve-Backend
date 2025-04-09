@@ -6,9 +6,11 @@ const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
 const { encrypt, decrypt } = require('./EncriptDecript');
+const urlFiles = require('./staticFiles');
 const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, insertUser, addUserChat, findUser, getUserChat, handleResetChat, checkUser, getSampleChat } = require('./db');
 require('dotenv').config();
 getOrigins().then((originList) => {
+    originList.unshift("http://worlddevelopment.in/chatadminhome");
     const app = express();
     const corsOptions = {
         origin: originList,
@@ -32,9 +34,9 @@ getOrigins().then((originList) => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cors(corsOptions));
+    const filesURL = urlFiles.getAllFilesUrls();
     app.use((req, res, next) => {
-        console.log("Request URL:", req.url);
-        // console.log("Session Data:", req.session);
+        // console.log("req.session : ", req.session);
         next();
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
@@ -147,7 +149,7 @@ getOrigins().then((originList) => {
     app.get('/chatcreate', (req, res) => {
         req.session.clientDetail = { user: req.query.user }
         res.setHeader('Content-Type', 'text/javascript; charset=utf-8');
-        res.sendFile(path.join(__dirname, 'public', 'chatcreate.js'));
+        res.sendFile(__dirname + '/public' + '/chatcreate.js');
     })
 
     app.post('/userchat', async (req, res) => {
@@ -212,10 +214,11 @@ getOrigins().then((originList) => {
     clientList = {};
     const io = socketIO(server, {
         allowRequest: (req, callback) => {
-            // console.log(req.headers.referer);
-            const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'https://worlddevelopment.in/chatadminhome';
+            console.log("Request Soscket connectionss:", req.headers.referer.slice(0, -1));
+            const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'http://worlddevelopment.in/chatadminhome';
             // console.log(`${req.headers.referer}`);
             // console.log(`isAllowed ${req.headers.referer.slice(0, -1)} :: ${isAllowed}`);
+            console.log("isAllowed : ", isAllowed);
             callback(null, isAllowed);
         },
         cors: {
@@ -231,7 +234,7 @@ getOrigins().then((originList) => {
         let query = socket.handshake.query;
         socket.type = query.type;
         socket.user = query.user;
-        console.log(`${query.type} :: ${query.user}:: ${socket.id}`);
+        // console.log(`Socket connection : ${query.type} :: ${query.user}:: ${socket.id}`);
         if (query.type === "clientUser") {
             clientList[socket.id] = { user: query.user, isLogin: 'green' }
         } else if (query.type === "adminUser") {
@@ -302,12 +305,12 @@ getOrigins().then((originList) => {
     //Artist Side Calss
 
     app.post("/getuploads", controller.getUploads);
-    app.post("/getallclamRelese", controller.artistAllClameRelese);
-    app.post("/cleamrelese", controller.artistClameRelese);
+    app.post("/getallclamRelese", controller.artistAllClameRelese); //Checked
+    app.post("/cleamrelese", controller.artistClameRelese); //Checked
     app.post("/submit_query", controller.submitQuery);
     app.post("/upload", controller.artistFilesUploadsWithDetails);
     app.post("/selectlists", controller.getAllSelectListOptions);
-    app.post("/allpaymentforuser", controller.allPaymentForUser);
+    app.post("/allpaymentforuser", controller.allPaymentForUser); //checked
     app.post("/createoac", controller.createOac);
     app.post("/profilepicupload", controller.profilepicUpload);
     app.post("/logout", controller.logout);
@@ -344,6 +347,27 @@ getOrigins().then((originList) => {
         res.sendFile(__dirname + '/kan-ban build/index.html');
     })
 
+    ///////////////////////////////////////////// Emoji remove API Starts ///////////////////////////////////////
+    app.use(express.static(__dirname + "/upwork"));
+    app.get('/upwork', (req, res) => {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.sendFile(__dirname + '/upwork/index.html');
+    })
+    app.post('/textsubmition', (req, res) => {
+        console.log(req.body);
+        const textToConvert = req.body.text;
+        console.log("Text is :", textToConvert);
+        function removeEmojis(text) {
+            return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF])/g, '');
+        }
+        // const longText = "Hello 😊! This is a test message with emojis 🎉🔥🚀 and more 💯✨.";
+        const cleanText = removeEmojis(textToConvert);
+        console.log("Cleaned text:", cleanText);
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.status(200).send(cleanText);
+    })
+
+    //////////////////////////////////////////// Emoji remove API Ends ///////////////////////////////////////
     app.get('*', (req, res) => {
         console.log("this is * route : ", req.hostname);
         res.redirect('http://worlddevelopment.in');
@@ -351,7 +375,21 @@ getOrigins().then((originList) => {
     })
     const localAddress = require('./osModule');
     const port = 80;
-    server.listen(port, localAddress.setAddress(), "192.168.1.10", () => {
+
+    //!Importent to regenrate the list of rout and update this list manualy on every new route added. //////////////////////////////
+    // function listRoutes(app) {
+    //     const routes = [];
+    //     app._router.stack.forEach((middleware) => {
+    //         if (middleware.route) {
+    //             if (middleware.route.path !== "*" && middleware.route.path !== "/chatcreate") {
+    //                 routes.push(middleware.route.path);
+    //             }
+    //         }
+    //     });
+    //     return routes;
+    // }
+    // console.log("List of Routes and Methods:", listRoutes(app));
+    server.listen(port, localAddress.setAddress(), () => {
         console.log(`Server is running on http://${localAddress.setAddress()}:${port}`);
     });
 });

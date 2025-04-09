@@ -4,7 +4,7 @@ async function getSelectList() {
     var listOfSelectLists = [];
     const selectListWorkBook = new ExcelJS.Workbook();
     try {
-        await selectListWorkBook.xlsx.readFile("./Music Distribution Site Data.xlsx");
+        await selectListWorkBook.xlsx.readFile("./SBM/Music Distribution Site Data.xlsx");
         const dataSheet = selectListWorkBook.getWorksheet(1);
         const columnB = dataSheet.getColumn("B");
         const columnA = dataSheet.getColumn("A");
@@ -36,11 +36,11 @@ async function getSelectList() {
     }
 }
 
-const doesValueExist = function(array, propertyName, targetValue) {
+const doesValueExist = function (array, propertyName, targetValue) {
     return array.some(obj => obj[propertyName] === targetValue);
 };
 
-const checkAndUpdate = function(array, propertyName, targetValue, newPropertyValue) {
+const checkAndUpdate = function (array, propertyName, targetValue, newPropertyValue) {
     const foundIndex = array.findIndex(obj => obj[propertyName] === targetValue);
 
     if (foundIndex !== -1) {
@@ -50,12 +50,12 @@ const checkAndUpdate = function(array, propertyName, targetValue, newPropertyVal
     return false;
 };
 
-const getValueByProperties = function(array, propertyToFind, valueToMatch, otherProperty, otherValue) {
+const getValueByProperties = function (array, propertyToFind, valueToMatch, otherProperty, otherValue) {
     const foundObject = array.find(obj => obj[propertyToFind] === valueToMatch && obj[otherProperty] === otherValue);
     return foundObject ? foundObject[propertyToFind] : null;
 };
-const deleteOldProfilePicture = function(fileName) {
-    fs.unlink(__dirname + `\\uploads\\profilepicture\\${fileName}`, err => {
+const deleteOldProfilePicture = function (fileName) {
+    fs.unlink(__dirname + `/uploads/profilepicture/${fileName}`, err => {
         if (err) {
             console.error("Error deleting file:", err);
         } else {
