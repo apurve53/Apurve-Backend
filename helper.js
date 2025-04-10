@@ -55,7 +55,7 @@ const getValueByProperties = function (array, propertyToFind, valueToMatch, othe
     return foundObject ? foundObject[propertyToFind] : null;
 };
 const deleteOldProfilePicture = function (fileName) {
-    fs.unlink(__dirname + `/uploads/profilepicture/${fileName}`, err => {
+    fs.unlink(__dirname + `/SBMuploads/profilepicture/${fileName}`, err => {
         if (err) {
             console.error("Error deleting file:", err);
         } else {
