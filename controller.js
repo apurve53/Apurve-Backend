@@ -8,6 +8,7 @@ const app = require("./server.js");
 const createdUsers = require("./createduser.js");
 const submittedQueries = require("./quries.js");
 const restractedUsers = new Map();
+console.log("restractedUsers after created : ", restractedUsers);
 const { insertDocument, updateData, deleteData, } = require("./dbwork.js");
 const allOptions = ["New Release", "Catalogue", "Payment"];
 const ytOptions = ["Claim Release", "Cntent ID Request", "Artist channel Request"];
@@ -519,10 +520,10 @@ const ytoptionsforadmin = (req, res) => {
 };
 const userWithOptions = (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=3600');
+  let restrictedUsers = Array.from(restractedUsers.keys());
+  let tempObj = { options: allOptions, ytoptions: ytOptions, restusers: restrictedUsers };
   if (req.body.user === "admin@gmail.com") {
     let allUsers = Array.from(createdUsers.keys());
-    let restrictedUsers = Array.from(restractedUsers.keys());
-    let tempObj = { options: allOptions, ytoptions: ytOptions, restusers: restrictedUsers };
     for (let user of allUsers) {
       if (user !== "admin@gmail.com") {
         tempObj[user] = { name: createdUsers.get(user).name, options: createdUsers.get(user).options, ytoptions: createdUsers.get(user).ytoptions };
@@ -531,7 +532,7 @@ const userWithOptions = (req, res) => {
     for (let user of restrictedUsers) {
       tempObj[user] = { name: restractedUsers.get(user).name, options: restractedUsers.get(user).options, ytoptions: restractedUsers.get(user).ytoptions };
     }
-    res.status(200).json(tempObj);
+    // res.status(200).json(tempObj);
   } else {
     res.end();
   }
@@ -544,6 +545,7 @@ const userWithOptions = (req, res) => {
   }
   res.status(200).json(tempObj);
 };
+
 const changeOptions = (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=0');
 
