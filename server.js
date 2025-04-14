@@ -3,14 +3,16 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
-const http = require('http');
+// const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const socketIO = require('socket.io');
 const { encrypt, decrypt } = require('./EncriptDecript');
 const urlFiles = require('./staticFiles');
 const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, insertUser, addUserChat, findUser, getUserChat, handleResetChat, checkUser, getSampleChat } = require('./db');
 require('dotenv').config();
 getOrigins().then((originList) => {
-    originList.unshift("http://worlddevelopment.in/chatadminhome");
+    originList.unshift("https://worlddevelopment.in/chatadminhome");
     const app = express();
     const corsOptions = {
         origin: originList,
@@ -198,7 +200,6 @@ getOrigins().then((originList) => {
         }
     })
 
-
     app.post('/logoutuser', async (req, res) => {
         req.session.destroy(function (err) {
             res.status(200).end();
@@ -208,14 +209,21 @@ getOrigins().then((originList) => {
 
     //////////////////////////////////// Here "chat Support" App APIs end//////////////////////////////////////////////////
 
-    const server = http.createServer(app);
+    // const server = http.createServer(app);
+    const options = {
+        key: fs.readFileSync('/etc/letsencrypt/live/worlddevelopment.in/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/worlddevelopment.in/fullchain.pem')
+        // key: fs.readFileSync('C:/Certbot/archive/worlddevelopment.in/privkey1.pem'),
+        // cert: fs.readFileSync('C:/Certbot/archive/worlddevelopment.in/fullchain1.pem')
+    };
+    const server = https.createServer(options, app);
     ///////////////////////////////////////////// Socket IO Chat Support Starts  ///////////////////////////////////////
     userList = {};
     clientList = {};
     const io = socketIO(server, {
         allowRequest: (req, callback) => {
             console.log("Request Soscket connectionss:", req.headers.referer.slice(0, -1));
-            const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'http://worlddevelopment.in/chatadminhome';
+            const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'https://worlddevelopment.in/chatadminhome';
             // console.log(`${req.headers.referer}`);
             // console.log(`isAllowed ${req.headers.referer.slice(0, -1)} :: ${isAllowed}`);
             console.log("isAllowed : ", isAllowed);
@@ -334,7 +342,6 @@ getOrigins().then((originList) => {
     app.post("/alloac", controller.allOac);
     app.post("/removeoac", controller.removeoac);
     app.post("/deleteuser", controller.deleteUser);
-
     app.post("/restractuser", controller.restractUser);
     app.post("/adminchangepassword", controller.adminChangePassword);
 
@@ -368,13 +375,23 @@ getOrigins().then((originList) => {
     })
 
     //////////////////////////////////////////// Emoji remove API Ends ///////////////////////////////////////
+
+    ////////////////////////////////////////// Rajat Construction APIs Starts ///////////////////////////////////////
+    app.use(express.static(__dirname + "/rajat build"));
+    app.get('/rajat', (req, res) => {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.sendFile(__dirname + '/rajat build/index.html');
+    })
+
     app.get('*', (req, res) => {
         console.log("this is * route : ", req.hostname);
-        res.redirect('http://worlddevelopment.in');
+        console.log("this is the URL : ", req.url);
+        res.redirect('https://worlddevelopment.in');
 
     })
+
     const localAddress = require('./osModule');
-    const port = 80;
+    const port = 443;
 
     //!Importent to regenrate the list of rout and update this list manualy on every new route added. //////////////////////////////
     // function listRoutes(app) {
@@ -389,6 +406,7 @@ getOrigins().then((originList) => {
     //     return routes;
     // }
     // console.log("List of Routes and Methods:", listRoutes(app));
+
     server.listen(port, localAddress.setAddress(), () => {
         console.log(`Server is running on http://${localAddress.setAddress()}:${port}`);
     });

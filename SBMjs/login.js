@@ -1,5 +1,5 @@
 async function checkSesstion() {
-  const checkSession = fetch("http://worlddevelopment.in/checksesstion", {
+  const checkSession = fetch("https://worlddevelopment.in/checksesstion", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

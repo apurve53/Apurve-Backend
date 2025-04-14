@@ -21,7 +21,7 @@ function loadSocketIO(callback) {
 document.addEventListener('DOMContentLoaded', async () => {
     await getUserChat();
     await dislayChat();
-    loadCSS('http://worlddevelopment.in/css-file-for-chatcreate.css');
+    loadCSS('https://worlddevelopment.in/css-file-for-chatcreate.css');
     loadSocketIO(() => {
         const scripts = document.getElementsByTagName('script');
         Array.from(scripts).forEach((script, index) => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
             }
         });
-        socket = io.connect('http://worlddevelopment.in', {
+        socket = io.connect('https://worlddevelopment.in', {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false, // Set to true in production
@@ -55,7 +55,7 @@ const chatButton = renderChatButton();
 const chatWindow = renderChatBox();
 let open = false;
 const getUserChat = async () => {
-    let response = await fetch('http://worlddevelopment.in/userchat', {
+    let response = await fetch('https://worlddevelopment.in/userchat', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
