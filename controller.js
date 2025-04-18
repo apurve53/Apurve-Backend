@@ -8,7 +8,6 @@ const app = require("./server.js");
 const createdUsers = require("./createduser.js");
 const submittedQueries = require("./quries.js");
 const restractedUsers = new Map();
-console.log("restractedUsers after created : ", restractedUsers);
 const { insertDocument, updateData, deleteData, } = require("./dbwork.js");
 const allOptions = ["New Release", "Catalogue", "Payment"];
 const ytOptions = ["Claim Release", "Cntent ID Request", "Artist channel Request"];

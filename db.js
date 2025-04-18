@@ -202,18 +202,7 @@ async function getAllChatForAI(userName) {
   console.log(`similerities in db.js : ${JSON.stringify(similerities)} on ${getTime()}`);
   return similerities;
 }
-// async function getPassword(username) {
-//   let database = client.db('chatdata');
-//   let collection = database.collection('user');
-//   // const dirChat = await collection.find({ user: username }, { projection: { "chat": 1, _id: 0 } }).toArray();
-//   const cbData = await collection.findOne({ username: decrypt(username) }, { projection: { "chat": 1, _id: 0 } });
 
-//   console.log("records : ", JSON.stringify(cbData['chat']));
-// }
-// getPassword(encrypt("apurve2014@gmail.com"));
-// getOrigins();
-// getSampleChat();
-// updatePasswordForTestUser();
 // console.log(getSampleChat());
 
 module.exports = { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, sendMessageToUser, insertUser, findUser, checkUser, addUserChat, getUserChat, handleResetChat, getSampleChat };

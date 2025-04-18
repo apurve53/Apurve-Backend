@@ -13,6 +13,7 @@ const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAl
 require('dotenv').config();
 getOrigins().then((originList) => {
     originList.unshift("https://worlddevelopment.in/chatadminhome");
+    originList.unshift("http://localhost:5173");
     const app = express();
     const corsOptions = {
         origin: originList,
@@ -23,10 +24,10 @@ getOrigins().then((originList) => {
         resave: false,
         saveUninitialized: true,
         cookie: {
-            secure: false,          // Only send over HTTPS
+            secure: true,          // Only send over HTTPS
             httpOnly: false,        // access via JavaScript
             maxAge: 1000 * 60 * 60, // 1 hour expiry
-            sameSite: 'lax',  //change it in "none" only if using HTTPS
+            sameSite: 'none',  //change it in "lax" only if using HTTP
             path: '/',             // Valid for all paths
             // signed: true,     //Removed because since you are not using cookieParser() with signing.
             //Note :-: By default, express-session only stores sessions in memory, which resets on server restart.
@@ -43,6 +44,7 @@ getOrigins().then((originList) => {
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
     app.use(express.static(__dirname + '/dist'));
+    app.use(express.static(__dirname + '/supportChatPublic'));
     // app.get('/', (req, res) => {
     // res.redirect('http://localhost:5173/');
     // })
@@ -97,7 +99,6 @@ getOrigins().then((originList) => {
             const { username, password } = req.body;
             if (req.session.userDetails.authanticated === false) {
                 const userStatus = await findUser(username, password);
-                console.log("userStatus : ", userStatus);
                 if (!userStatus.user) {
                     res.status(402);
                 } else {
