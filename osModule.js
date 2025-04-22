@@ -3,7 +3,6 @@ const localAddress = {
     runningIp: "",
     setAddress: function () {
         if (this.runningIp == "") {
-            console.log("function is running");
             let networkInterfaces = os.networkInterfaces();
             Object.values(networkInterfaces).some(interfaces => {
                 interfaces.some(interfaceObj => {

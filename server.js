@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 // const http = require('http');
@@ -14,6 +16,7 @@ require('dotenv').config();
 getOrigins().then((originList) => {
     originList.unshift("https://worlddevelopment.in/chatadminhome");
     originList.unshift("http://localhost:5173");
+    originList.unshift("https://apurve53.github.io");
     const app = express();
     const corsOptions = {
         origin: originList,
@@ -383,12 +386,46 @@ getOrigins().then((originList) => {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.sendFile(__dirname + '/rajat build/index.html');
     })
+    ////////////////////////////////////////// Rajat Construction APIs Ends ///////////////////////////////////////
+
+    /////////////////////////////////////////// Google Sheets Integration API Starts ///////////////////////////////////////
+    app.post('/add_to_google_sheet', async (req, res) => {
+        console.log("this route is called");
+        console.log("this is the URL : ", req.url);
+        const formData = req.body;
+        console.log('Received form data:', formData);
+        try {
+            // Use the service account key directly from the JSON file
+            const credentials = require('./glassy-iridium-424714-r9-f3b5f1c03794.json');
+            const auth = new JWT({
+                email: credentials.client_email,
+                key: credentials.private_key,
+                scopes: [
+                    'https://www.googleapis.com/auth/spreadsheets',
+                ],
+            });
+            // Initialize the Google Sheets document using its ID
+            const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID, auth);
+            // await doc.useServiceAccountAuth(auth);
+            console.log("Document Title : ", doc.title);
+            await doc.loadInfo(); // loads document properties and worksheets
+            const sheet = doc.sheetsByIndex[0]; // Assuming you want to write to the first sheet
+            console.log("Sheet Title : ", sheet.title);
+            console.log("Sheet Row Count : ", sheet.rowCount);
+            // Add a new row with the provided data
+            const newRow = await sheet.addRow(data);
+            console.log('Row added:', newRow);
+            res.status(200).json({ message: 'Data successfully written to Google Sheet!' });
+        } catch (error) {
+            console.error('Error writing to Google Sheet:', error);
+            res.status(500).json({ error: 'Failed to write data to Google Sheet.' });
+        }
+    })
 
     app.get('*', (req, res) => {
         console.log("this is * route : ", req.hostname);
-        console.log("this is the URL : ", req.url);
+        console.log("this is the URL in * route : ", req.url);
         res.redirect('https://worlddevelopment.in');
-
     })
 
     const localAddress = require('./osModule');
