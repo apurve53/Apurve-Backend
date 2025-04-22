@@ -393,9 +393,8 @@ getOrigins().then((originList) => {
         console.log("this route is called");
         console.log("this is the URL : ", req.url);
         const formData = req.body;
-        console.log('Received form data:', formData);
+        console.log('Received form data:', Object.keys(formData));
         try {
-            // Use the service account key directly from the JSON file
             const credentials = require('./glassy-iridium-424714-r9-f3b5f1c03794.json');
             const auth = new JWT({
                 email: credentials.client_email,
@@ -404,17 +403,49 @@ getOrigins().then((originList) => {
                     'https://www.googleapis.com/auth/spreadsheets',
                 ],
             });
-            // Initialize the Google Sheets document using its ID
             const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID, auth);
-            // await doc.useServiceAccountAuth(auth);
-            console.log("Document Title : ", doc.title);
-            await doc.loadInfo(); // loads document properties and worksheets
-            const sheet = doc.sheetsByIndex[0]; // Assuming you want to write to the first sheet
-            console.log("Sheet Title : ", sheet.title);
-            console.log("Sheet Row Count : ", sheet.rowCount);
-            // Add a new row with the provided data
-            const newRow = await sheet.addRow(data);
-            console.log('Row added:', newRow);
+            await doc.loadInfo();
+            let sheet = null;
+            let newRow = null;
+            if (Object.keys(formData).includes('You need My Developer')) {
+                sheet = doc.sheetsByTitle['You need My Developer'];
+                if (sheet) {
+                    newRow = await sheet.addRow(formData);
+                } else {
+                    console.log("Sheet Title is not found");
+                    sheet = await doc.addSheet({ title: 'You need My Developer', headerValues: Object.keys(formData) });
+                    newRow = await sheet.addRow(formData);
+                }
+            } else if (Object.keys(formData).includes('New Project')) {
+                sheet = doc.sheetsByTitle['New Project'];
+                if (sheet) {
+                    newRow = await sheet.addRow(formData);
+                } else {
+                    console.log("New Project Title is not found");
+                    sheet = await doc.addSheet({ title: "New Project", headerValues: Object.keys(formData) });
+                    newRow = await sheet.addRow(formData);
+                }
+            } else if (Object.keys(formData).includes('Project Contribution')) {
+                sheet = doc.sheetsByTitle['Project Contribution'];
+                if (sheet) {
+                    newRow = await sheet.addRow(formData);
+                } else {
+                    console.log("Project Contribution Title is not found");
+                    sheet = await doc.addSheet({ title: "Project Contribution", headerValues: Object.keys(formData) });
+                    newRow = await sheet.addRow(formData);
+                }
+            }
+            else if (Object.keys(formData).includes('Full Time Work')) {
+                sheet = doc.sheetsByTitle['Full Time Work'];
+                if (sheet) {
+                    newRow = await sheet.addRow(formData);
+                } else {
+                    console.log("Full Time Work Title is not found");
+                    sheet = await doc.addSheet({ title: "Full Time Work", headerValues: Object.keys(formData) });
+                    newRow = await sheet.addRow(formData);
+                }
+            }
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.status(200).json({ message: 'Data successfully written to Google Sheet!' });
         } catch (error) {
             console.error('Error writing to Google Sheet:', error);

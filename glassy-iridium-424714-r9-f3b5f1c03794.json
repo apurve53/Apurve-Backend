@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "glassy-iridium-424714-r9",
+  "private_key_id": "f3b5f1c0379444ae3ac3eddd0f1f480b91c82ac2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCV1sfMgEPOXlpp\nMdOR1ecQZ5WMbB+G9Z7YJnOHBdrD2Rr4UmyclFQvJKKlqWt1hWAiyUxKx+5ReTAn\nlfEhSjUieoO6AT2g1lG+De2MkCRuuDZEdk2Ap33bA84R9XEgjZ7NI0hP3sAjoyTo\n6pmgqQQ6Uq1JCMI+P83K+hYAalwq7OTl9tFYO8zJH688SeOm4bd5J7ocuA6RCo4s\ncEWOzWXNnLwOaf3LyzJ15kQnRNS1DrXnLs3F5CMCXNZ/MdHy0GkBugK44HsUgGRQ\nWEPTgHu72lAJLEtWUfdYAxieeR2ryfAH4JSa+zyKHhYozoae+5KDEdYfVV0VJgpB\nqXP9m3NfAgMBAAECggEABEdjYkAhb5G7NDjTiV0Z4ZqLpzxpNBHsjNCgSPFOW3xm\nLEQyTNBhjQ0XRfLOGkeKRMQJ1TLbZ+E1klPSVHiJhugHvfaOG3szT2GXcIWnPLAv\nAIp+URe3XNtBdbrUFbFloQcKaBl81CezBKG6bF+XOtEkmKrS3TM2Pb8hhLaE1kbt\nXDHZEu4+miC3swDezeos4oDC+HKQp5BQAwOcbNFQ6auF6mRj/HSnnh3OCx9izQpE\n/9AatzZ7yuWbhKA3yp3W6VBWVRj2STTg9tnX9Zqg4UbrwfGlPXtg/XLddeav/sVv\ngMv/eRso46eyEqtps0NxrqsywkvDZ5vwuec6cqsk9QKBgQDIErvP0HiQ0P4pkQwM\nKOX3fUYH+hk+ToGre3mod7jX4yjGtvSD64qihkeswrCzV0iqVsnp1aDx/zdcHM1r\nVgVlRFq0aOycz0o6zdnTM+8LHjXMUO3PPzkzuaRikT3aDcUT06CdflvdCJVUbpUA\nITb/IjOEQdXVvfmKk1rINCysawKBgQC/uUfTzgdIOrQL5ZKKTeerX3GZ5SEFugYs\nca6IyWtzuQM7mB44t5tPvrpn7+hVj7EccjfQih9aIjYKhxZxTfweL/eZn5d7wmtH\n+3D+AGcJoHlaXA/QijAoqSCwnLPbhtfAMvNCIEw0yO0g4eU2g6FKqOdtFkMta18Q\nj73DiKaR3QKBgQCWHeBHZB8iYX1iiM9mTEWINbmXAKNyKYuHtCSrL/FEItAUkW/T\nj6a8nU4oJQhZ99Kw5F+pkL2q9Zh/B6llsOxpeCkqllN6sNn8VznqC1x/lhI9lDdq\nugBcfB0IS/wBoTVO1An+QbIBnZAWAsbPixxtwCaxRIiCUIFs5XVHJEakswKBgQCZ\nlP+v8QQuXTArs4yvE/c4de2XvU+1ua4GXk7VLpzQB+5KB/J1tsdIm13RswInwEK9\nqdWCTZMN7gfiaRKWU0VanUw4GPsNXdH4yLhcENB5ir6LnuHgSUKI3+ra77y4Z41f\nXrE1UJAbXLVwOOUXxVwoZaN15HaN5MwzhSIbh9T/VQKBgE1C8e/iShNRBJONYEzB\nK/HL2vgf88VdpWnEW4Pfqm1L4Q1gUegbDJzlxsGIiSbIPJCi1ooLY/pwk9zAP7SZ\nukXqZOHrZOuwtGun5Zpb1we6vfqpqWPtjC0/alKiJgnwIS5unW1bZtTUwfo37NPm\nAld9kOIx7haqkDIJLvj+f/Yn\n-----END PRIVATE KEY-----\n",
+  "client_email": "using-sheets@glassy-iridium-424714-r9.iam.gserviceaccount.com",
+  "client_id": "107176147776094608905",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/using-sheets%40glassy-iridium-424714-r9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
