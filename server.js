@@ -7,7 +7,9 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 // const http = require('http');
 const https = require('https');
+const path = require('path');
 const fs = require('fs');
+const logFilePath = path.join(__dirname, 'requests.log');
 const socketIO = require('socket.io');
 const { encrypt, decrypt } = require('./EncriptDecript');
 const urlFiles = require('./staticFiles');
@@ -454,8 +456,22 @@ getOrigins().then((originList) => {
     })
 
     app.get('*', (req, res) => {
-        console.log("this is * route : ", req.hostname);
-        console.log("this is the URL in * route : ", req.url);
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        const logData = `
+        ==================== New Request ====================
+        📅 Timestamp: ${new Date().toISOString()}
+        🌐 IP Address: ${ip}
+        🔗 Hostname: ${req.hostname}
+        🧭 Requested URL: ${req.url}
+        📬 HTTP Method: ${req.method}
+        📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+        🧠 User-Agent: ${req.get('User-Agent')}
+        📦 Headers:
+        ${JSON.stringify(req.headers, null, 2)}
+        =====================================================
+        
+        `;
+        fs.appendFileSync(logFilePath, logData, 'utf8');
         res.redirect('https://worlddevelopment.in');
     })
 
