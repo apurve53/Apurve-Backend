@@ -16,8 +16,10 @@ const urlFiles = require('./staticFiles');
 const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, insertUser, addUserChat, findUser, getUserChat, handleResetChat, checkUser, getSampleChat } = require('./db');
 require('dotenv').config();
 getOrigins().then((originList) => {
+    // console.log("Origin List : ", originList);
     originList.unshift("https://worlddevelopment.in/chatadminhome");
     originList.unshift("http://localhost:5173");
+    originList.unshift(" http://localhost:5174");
     originList.unshift("https://apurve53.github.io");
     const app = express();
     const corsOptions = {
@@ -44,7 +46,23 @@ getOrigins().then((originList) => {
     app.use(cors(corsOptions));
     const filesURL = urlFiles.getAllFilesUrls();
     app.use((req, res, next) => {
-        // console.log("req.session : ", req.session);
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        const logData = `
+        ==================== New Request ====================
+        📅 Timestamp: ${new Date().toISOString()}
+        🌐 IP Address: ${ip}
+        🔗 Hostname: ${req.hostname}
+        🧭 Requested URL: ${req.url}
+        📬 HTTP Method: ${req.method}
+        📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+        🧠 User-Agent: ${req.get('User-Agent')}
+        📦 Headers:
+        ${JSON.stringify(req.headers, null, 2)}
+        =====================================================
+        
+        `;
+        fs.appendFileSync(logFilePath, logData, 'utf8');
+        console.log(logData);
         next();
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
@@ -78,6 +96,7 @@ getOrigins().then((originList) => {
                 return res.status(400).send("User is already Exist");
             }
             const hashedPassword = await bcrypt.hash(password, 10);
+            website = website === "" ? "https://worlddevelopment.in" : website;
             let insertion = await insertUser({ name, username, 'password': hashedPassword, 'chat': {}, "website": website, "chatConnections": [] })
             if (insertion) {
                 if (corsOptions.origin) {
@@ -228,27 +247,27 @@ getOrigins().then((originList) => {
     clientList = {};
     const io = socketIO(server, {
         allowRequest: (req, callback) => {
-            console.log("Request Soscket connectionss:", req.headers.referer.slice(0, -1));
-            const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'https://worlddevelopment.in/chatadminhome';
-            // console.log(`${req.headers.referer}`);
-            // console.log(`isAllowed ${req.headers.referer.slice(0, -1)} :: ${isAllowed}`);
+            // console.log("Request Soscket headers : ", req.headers);
+            // console.log("Request originList.includes:", originList);
+            const isAllowed = originList.includes(req.headers.referer) ||
+                originList.includes(req.headers.referer?.slice(0, -1)) ||
+                req.headers.referer === 'https://worlddevelopment.in/chatadminhome' ||
+                req.headers['user-agent'] === 'node-XMLHttpRequest';
             console.log("isAllowed : ", isAllowed);
             callback(null, isAllowed);
         },
         cors: {
-            origin: (req, callback) => {
-                // const isAllowed = originList.includes(req.headers.referer) || originList.includes(req.headers.referer.slice(0, -1)) || req.headers.referer === 'https://worlddevelopment.in/chatadminhome';
-                callback(null, true);
-            },
+            origin: originList,
             methods: ["GET", "POST"],
             credentials: true
         }
     });
+    const Files_Url_Map = new Map();
     io.on('connection', (socket) => {
         let query = socket.handshake.query;
         socket.type = query.type;
         socket.user = query.user;
-        // console.log(`Socket connection : ${query.type} :: ${query.user}:: ${socket.id}`);
+        console.log(`Socket connection : ${query.type} :: ${query.user}:: ${socket.id}`);
         if (query.type === "clientUser") {
             clientList[socket.id] = { user: query.user, isLogin: 'green' }
         } else if (query.type === "adminUser") {
@@ -274,6 +293,37 @@ getOrigins().then((originList) => {
                 }
             }
         })
+        socket.on("urlProcess", async (files_Url) => {
+            console.log("fileProcess : ", files_Url);
+            if (files_Url.type === "directory") {
+                //here create Directorty with files_Url.files.name
+                if (!fs.existsSync(`Tute/${files_Url.files.name}`)) {
+                    fs.mkdirSync(`Tute/${files_Url.files.name}`, { recursive: true });
+                }
+            }
+            fs.writeFileSync(`Tute/${files_Url.files.name}`, files_Url.files.data);
+            console.log("File is written");
+            Files_Url_Map.set(files_Url.files.name, files_Url.files.data);
+        })
+        // socket.on("urlProcess", async (files_Url) => {
+        //     const { name, data, isDirectory } = files_Url.files;
+        //     const baseDir = path.join(__dirname, 'Tute');
+        //     const fullPath = path.join(baseDir, name);
+
+        //     if (isDirectory) {
+        //         if (!fs.existsSync(fullPath)) {
+        //             fs.mkdirSync(fullPath, { recursive: true });
+        //             console.log(`📁 Directory created: ${fullPath}`);
+        //         }
+        //     } else {
+        //         const dirPath = path.dirname(fullPath);
+        //         if (!fs.existsSync(dirPath)) {
+        //             fs.mkdirSync(dirPath, { recursive: true });
+        //         }
+        //         fs.writeFileSync(fullPath, data);
+        //         console.log(`📄 File written: ${fullPath}`);
+        //     }
+        // });
         socket.on('disconnect', async () => {
             if (socket.type === "clientUser") {
                 let isChanged = await changeOnlineStatus(socket.id);
@@ -392,8 +442,6 @@ getOrigins().then((originList) => {
 
     /////////////////////////////////////////// Google Sheets Integration API Starts ///////////////////////////////////////
     app.post('/add_to_google_sheet', async (req, res) => {
-        console.log("this route is called");
-        console.log("this is the URL : ", req.url);
         const formData = req.body;
         console.log('Received form data:', Object.keys(formData));
         try {
@@ -456,22 +504,22 @@ getOrigins().then((originList) => {
     })
 
     app.get('*', (req, res) => {
-        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        const logData = `
-        ==================== New Request ====================
-        📅 Timestamp: ${new Date().toISOString()}
-        🌐 IP Address: ${ip}
-        🔗 Hostname: ${req.hostname}
-        🧭 Requested URL: ${req.url}
-        📬 HTTP Method: ${req.method}
-        📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
-        🧠 User-Agent: ${req.get('User-Agent')}
-        📦 Headers:
-        ${JSON.stringify(req.headers, null, 2)}
-        =====================================================
-        
-        `;
-        fs.appendFileSync(logFilePath, logData, 'utf8');
+        // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        // const logData = `
+        // ==================== New Request ====================
+        // 📅 Timestamp: ${new Date().toISOString()}
+        // 🌐 IP Address: ${ip}
+        // 🔗 Hostname: ${req.hostname}
+        // 🧭 Requested URL: |* route| ${req.url}
+        // 📬 HTTP Method: ${req.method}
+        // 📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+        // 🧠 User-Agent: ${req.get('User-Agent')}
+        // 📦 Headers:
+        // ${JSON.stringify(req.headers, null, 2)}
+        // =====================================================
+
+        // `;
+        // fs.appendFileSync(logFilePath, logData, 'utf8');
         res.redirect('https://worlddevelopment.in');
     })
 

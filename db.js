@@ -180,7 +180,10 @@ function getOrigins() {
   return collection.find({}, { projection: { website: 1, _id: 0 } }).toArray().then((listOfWebsites) => {
     let originList = [];
     for (let i = 0; i < listOfWebsites.length; i++) {
-      originList.push(listOfWebsites[i].website);
+      // console.log(listOfWebsites[i]);
+      if (listOfWebsites[i].website) {
+        originList.push(listOfWebsites[i].website);
+      }
     }
     return originList;
   }).catch((error) => {
@@ -188,6 +191,20 @@ function getOrigins() {
     throw error; // Re-throw the error for the caller to handle
   });
 }
+
+getOrigins()
+
+async function test_getOrigins() {
+  let database = client.db('chatdata');
+  let collection = database.collection('user');
+  let data1 = await collection.find({}).toArray();
+
+  // let data = await collection.find({}).toArray();
+  console.log("data : ", data1);
+  // console.log("data : ", data1);
+  // return originList;
+}
+// test_getOrigins()
 
 async function getAllChatForAI(userName) {
   let database = client.db('chatdata');
