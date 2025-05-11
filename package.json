@@ -4,7 +4,7 @@
   "description": "This is Completely new Server for my Website With node Express here I will try to put all my past work together to show on the worlddevelopment.in",
   "main": "server.js",
   "scripts": {
-    "test": "run"
+    "debug": "node server.js"
   },
   "repository": {
     "type": "git",

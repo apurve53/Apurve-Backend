@@ -47,22 +47,22 @@ getOrigins().then((originList) => {
     const filesURL = urlFiles.getAllFilesUrls();
     app.use((req, res, next) => {
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        const logData = `
-        ==================== New Request ====================
-        📅 Timestamp: ${new Date().toISOString()}
-        🌐 IP Address: ${ip}
-        🔗 Hostname: ${req.hostname}
-        🧭 Requested URL: ${req.url}
-        📬 HTTP Method: ${req.method}
-        📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
-        🧠 User-Agent: ${req.get('User-Agent')}
-        📦 Headers:
-        ${JSON.stringify(req.headers, null, 2)}
-        =====================================================
-        
-        `;
-        fs.appendFileSync(logFilePath, logData, 'utf8');
-        console.log(logData);
+        // const logData = `
+        // ==================== New Request ====================
+        // 📅 Timestamp: ${new Date().toISOString()}
+        // 🌐 IP Address: ${ip}
+        // 🔗 Hostname: ${req.hostname}
+        // 🧭 Requested URL: ${req.url}
+        // 📬 HTTP Method: ${req.method}
+        // 📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+        // 🧠 User-Agent: ${req.get('User-Agent')}
+        // 📦 Headers:
+        // ${JSON.stringify(req.headers, null, 2)}
+        // =====================================================
+
+        // `;
+        // fs.appendFileSync(logFilePath, logData, 'utf8');
+        // console.log(logData);
         next();
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
@@ -262,7 +262,7 @@ getOrigins().then((originList) => {
             credentials: true
         }
     });
-    const Files_Url_Map = new Map();
+    const TARGET_BASE = path.join(__dirname, 'Tute');
     io.on('connection', (socket) => {
         let query = socket.handshake.query;
         socket.type = query.type;
@@ -293,19 +293,38 @@ getOrigins().then((originList) => {
                 }
             }
         })
-        socket.on("urlProcess", async (files_Url) => {
-            console.log("fileProcess : ", files_Url);
-            if (files_Url.type === "directory") {
-                //here create Directorty with files_Url.files.name
-                if (!fs.existsSync(`Tute/${files_Url.files.name}`)) {
-                    fs.mkdirSync(`Tute/${files_Url.files.name}`, { recursive: true });
-                }
+
+        socket.on('makeDirectory', (relativePath) => {
+            const dirPath = path.join(TARGET_BASE, relativePath);
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+                console.log('Created directory:', dirPath);
             }
-            fs.writeFileSync(`Tute/${files_Url.files.name}`, files_Url.files.data);
-            console.log("File is written");
-            Files_Url_Map.set(files_Url.files.name, files_Url.files.data);
+        });
+
+        socket.on('writeFile', (file) => {
+            const filePath = path.join(TARGET_BASE, file.path);
+            fs.writeFileSync(filePath, file.data);
+            console.log('Written file:', filePath);
+        });
+
+        socket.on("urlProcess", async (obj) => {
+            try {
+
+                const { isDir, dirName, writePath, data } = obj;
+                if (isDir) {
+                    console.log(`is Dir This is folder :, ${isDir}, ${dirName}`);
+                    fs.mkdirSync(path.join(TARGET_BASE, dirName));
+                    TARGET_BASE = path.join(TARGET_BASE, dirName);
+                } else {
+                    console.log(`is Dir this is file :, ${isDir}, ${dirName}, ${writePath}, `);
+                    fs.writeFileSync(writePath, data);
+                }
+            } catch (err) {
+                console.log("this is Error : ", err);
+            }
         })
-        // socket.on("urlProcess", async (files_Url) => {
+        // socket.on("urlProcess", async (recivedObject) => {
         //     const { name, data, isDirectory } = files_Url.files;
         //     const baseDir = path.join(__dirname, 'Tute');
         //     const fullPath = path.join(baseDir, name);
