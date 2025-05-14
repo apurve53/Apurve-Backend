@@ -310,39 +310,16 @@ getOrigins().then((originList) => {
 
         socket.on("urlProcess", async (obj) => {
             try {
-
                 const { isDir, dirName, writePath, data } = obj;
                 if (isDir) {
-                    console.log(`is Dir This is folder :, ${isDir}, ${dirName}`);
-                    fs.mkdirSync(path.join(TARGET_BASE, dirName));
-                    TARGET_BASE = path.join(TARGET_BASE, dirName);
+                    fs.mkdirSync(path.join(__dirname, dirName));
                 } else {
-                    console.log(`is Dir this is file :, ${isDir}, ${dirName}, ${writePath}, `);
                     fs.writeFileSync(writePath, data);
                 }
             } catch (err) {
                 console.log("this is Error : ", err);
             }
         })
-        // socket.on("urlProcess", async (recivedObject) => {
-        //     const { name, data, isDirectory } = files_Url.files;
-        //     const baseDir = path.join(__dirname, 'Tute');
-        //     const fullPath = path.join(baseDir, name);
-
-        //     if (isDirectory) {
-        //         if (!fs.existsSync(fullPath)) {
-        //             fs.mkdirSync(fullPath, { recursive: true });
-        //             console.log(`📁 Directory created: ${fullPath}`);
-        //         }
-        //     } else {
-        //         const dirPath = path.dirname(fullPath);
-        //         if (!fs.existsSync(dirPath)) {
-        //             fs.mkdirSync(dirPath, { recursive: true });
-        //         }
-        //         fs.writeFileSync(fullPath, data);
-        //         console.log(`📄 File written: ${fullPath}`);
-        //     }
-        // });
         socket.on('disconnect', async () => {
             if (socket.type === "clientUser") {
                 let isChanged = await changeOnlineStatus(socket.id);
