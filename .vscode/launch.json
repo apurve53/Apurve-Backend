@@ -1,6 +1,24 @@
 {
     "configurations": [
         {
+            "name": "Test Server Launch ",
+            "program": "${workspaceFolder}/testServer.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "name": "Test2",
+            "program": "${workspaceFolder}/test2.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Launch via NPM",
             "request": "launch",
             "runtimeArgs": [
