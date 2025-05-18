@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# This file is to delete the all files and folder in Tute Folder. In starting it was working well but suddelnly it is not deleting the files present direct in Tute folder
 # Set the absolute path to the Tute folder
 TUTE_DIR="/home/apurv/Desktop/Apurve-Backend/Tute"
 

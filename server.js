@@ -5,7 +5,6 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
-// const http = require('http');
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
@@ -26,7 +25,7 @@ getOrigins().then((originList) => {
         origin: originList,
         credentials: true,
     }
-    app.use(session({
+    const sessionMiddleware = session({
         secret: process.env.SEC_FOR_PROT_SERVER,
         resave: false,
         saveUninitialized: true,
@@ -40,7 +39,8 @@ getOrigins().then((originList) => {
             //Note :-: By default, express-session only stores sessions in memory, which resets on server restart.
             // To persist sessions properly, use MongoDB, Redis, or FileStore:
         },
-    }));
+    })
+    app.use(sessionMiddleware);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cors(corsOptions));
@@ -77,6 +77,8 @@ getOrigins().then((originList) => {
             if (!req.session.userDetails) {
                 req.session.userDetails = { authanticated: false, applications: [], user: "new user" };
                 res.status(200).json({ "working": "session is created" });
+            } else if (req.session.userDetails.authanticated === true && req.session.userDetails.applications.includes('Desktop_App')) {
+                res.status(200).send(true);
             } else if (req.session.userDetails.authanticated === true) {
                 res.status(200).json({ user: req.session.userDetails.user });
             } else {
@@ -253,7 +255,6 @@ getOrigins().then((originList) => {
                 originList.includes(req.headers.referer?.slice(0, -1)) ||
                 req.headers.referer === 'https://worlddevelopment.in/chatadminhome' ||
                 req.headers['user-agent'] === 'node-XMLHttpRequest';
-            console.log("isAllowed : ", isAllowed);
             callback(null, isAllowed);
         },
         cors: {
@@ -262,12 +263,14 @@ getOrigins().then((originList) => {
             credentials: true
         }
     });
+    io.engine.use(sessionMiddleware);
     const TARGET_BASE = path.join(__dirname, 'Tute');
     io.on('connection', (socket) => {
+        const session = socket.request.session;
+        console.log("in Socket.io urlProcess: ", session.id);
         let query = socket.handshake.query;
         socket.type = query.type;
         socket.user = query.user;
-        console.log(`Socket connection : ${query.type} :: ${query.user}:: ${socket.id}`);
         if (query.type === "clientUser") {
             clientList[socket.id] = { user: query.user, isLogin: 'green' }
         } else if (query.type === "adminUser") {
@@ -294,21 +297,8 @@ getOrigins().then((originList) => {
             }
         })
 
-        socket.on('makeDirectory', (relativePath) => {
-            const dirPath = path.join(TARGET_BASE, relativePath);
-            if (!fs.existsSync(dirPath)) {
-                fs.mkdirSync(dirPath, { recursive: true });
-                console.log('Created directory:', dirPath);
-            }
-        });
-
-        socket.on('writeFile', (file) => {
-            const filePath = path.join(TARGET_BASE, file.path);
-            fs.writeFileSync(filePath, file.data);
-            console.log('Written file:', filePath);
-        });
-
         socket.on("urlProcess", async (obj) => {
+            console.log("in Socket.io urlProcess: ", session.id);
             try {
                 const { isDir, dirName, writePath, data } = obj;
                 if (isDir) {
@@ -397,7 +387,7 @@ getOrigins().then((originList) => {
     app.post("/restractuser", controller.restractUser);
     app.post("/adminchangepassword", controller.adminChangePassword);
 
-    //////////////////////////////////////////// SBM Digital API Starts ///////////////////////////////////////
+    //////////////////////////////////////////// SBM Digital API Ends ///////////////////////////////////////
 
     /////////////////////////////////////////// Kannan View API Starts ///////////////////////////////////////
     app.use(express.static(__dirname + "/kan-ban build"));
@@ -496,6 +486,52 @@ getOrigins().then((originList) => {
         } catch (error) {
             console.error('Error writing to Google Sheet:', error);
             res.status(500).json({ error: 'Failed to write data to Google Sheet.' });
+        }
+    })
+    /////////////////////////////////////////// Google Sheets Integration API Ends ///////////////////////////////////////
+
+
+    ////////////////////////////////////////// Desktop App APIs Starts //////////////////////////////////////////////////
+
+    const { Login_Check } = require('./D_db.js');
+
+    app.post('/logoutEApp', (req, res) => {
+        console.log('session while Logout : ', req.session.id);
+        req.session.destroy(err => {
+            if (err) {
+                console.log('Error destroying session:', err);
+                return res.status(500).send();
+            }
+            // Optional: Clear cookie on client side
+            res.clearCookie('connect.sid', {
+                path: '/',
+                secure: true,
+                sameSite: 'none',
+                httpOnly: false
+            });
+            res.status(200).send();
+        });
+    })
+
+    app.post('/studentLogin', (req, res) => {
+        console.log("req.session Id is :", req.session.id);
+        const { email, password } = req.body;
+        if (req.session.userDetails.authanticated === false) {
+            Login_Check({ email, password, 'sessionId': req.session.id }).then((result) => {
+                if (result) {
+                    console.log("Session id in login for attach to user");
+                    req.session.userDetails.authanticated = true;
+                    req.session.userDetails.applications = [...req.session.userDetails.applications, "Desktop_App"];
+                    req.session.userDetails.user = 'desktop_app_user'
+                    res.status(200).send();
+                } else {
+                    res.status(401).end();
+                }
+            }).catch((err) => {
+                res.status(401).end();
+            });
+        } else {
+            res.status(401).end();
         }
     })
 
