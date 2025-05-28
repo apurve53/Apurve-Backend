@@ -27,7 +27,7 @@ getOrigins().then((originList) => {
     }
     const sessionMiddleware = session({
         secret: process.env.SEC_FOR_PROT_SERVER,
-        resave: false,
+        resave: true,
         saveUninitialized: true,
         cookie: {
             secure: true,          // Only send over HTTPS
@@ -40,6 +40,7 @@ getOrigins().then((originList) => {
             // To persist sessions properly, use MongoDB, Redis, or FileStore:
         },
     })
+    const sessionStore = sessionMiddleware.store;
     app.use(sessionMiddleware);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,21 +48,19 @@ getOrigins().then((originList) => {
     const filesURL = urlFiles.getAllFilesUrls();
     app.use((req, res, next) => {
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        // const logData = `
-        // ==================== New Request ====================
-        // 📅 Timestamp: ${new Date().toISOString()}
-        // 🌐 IP Address: ${ip}
-        // 🔗 Hostname: ${req.hostname}
-        // 🧭 Requested URL: ${req.url}
-        // 📬 HTTP Method: ${req.method}
-        // 📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
-        // 🧠 User-Agent: ${req.get('User-Agent')}
-        // 📦 Headers:
-        // ${JSON.stringify(req.headers, null, 2)}
-        // =====================================================
-
-        // `;
-        // fs.appendFileSync(logFilePath, logData, 'utf8');
+        const logData = `
+        ==================== New Request ====================
+        📅 Timestamp: ${new Date().toISOString()}
+        🌐 IP Address: ${ip}
+        🔗 Hostname: ${req.hostname}
+        🧭 Requested URL: ${req.url}
+        📬 HTTP Method: ${req.method}
+        📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+        🧠 User-Agent: ${req.get('User-Agent')}
+        📦 Headers:
+        =====================================================
+        `;
+        fs.appendFileSync(logFilePath, logData, 'utf8');
         // console.log(logData);
         next();
     });
@@ -71,7 +70,6 @@ getOrigins().then((originList) => {
     // app.get('/', (req, res) => {
     // res.redirect('http://localhost:5173/');
     // })
-
     app.post('/checksesstion', (req, res) => {
         try {
             if (!req.session.userDetails) {
@@ -82,7 +80,7 @@ getOrigins().then((originList) => {
             } else if (req.session.userDetails.authanticated === true) {
                 res.status(200).json({ user: req.session.userDetails.user });
             } else {
-                res.status(200).json({});
+                res.status(200).send();
             }
         } catch (error) {
             res.status(500).json({ error: "Internal server error" });
@@ -249,8 +247,6 @@ getOrigins().then((originList) => {
     clientList = {};
     const io = socketIO(server, {
         allowRequest: (req, callback) => {
-            // console.log("Request Soscket headers : ", req.headers);
-            // console.log("Request originList.includes:", originList);
             const isAllowed = originList.includes(req.headers.referer) ||
                 originList.includes(req.headers.referer?.slice(0, -1)) ||
                 req.headers.referer === 'https://worlddevelopment.in/chatadminhome' ||
@@ -263,14 +259,16 @@ getOrigins().then((originList) => {
             credentials: true
         }
     });
-    io.engine.use(sessionMiddleware);
+    // io.engine.use(sessionMiddleware);
+    io.use((socket, next) => {
+        sessionMiddleware(socket.request, {}, next);
+    });
     const TARGET_BASE = path.join(__dirname, 'Tute');
     io.on('connection', (socket) => {
-        const session = socket.request.session;
-        console.log("in Socket.io urlProcess: ", session.id);
         let query = socket.handshake.query;
+        console.log("query is : ", query);
         socket.type = query.type;
-        socket.user = query.user;
+        socket.user = query.user; //This is the user Document Id in mongodb.
         if (query.type === "clientUser") {
             clientList[socket.id] = { user: query.user, isLogin: 'green' }
         } else if (query.type === "adminUser") {
@@ -279,6 +277,13 @@ getOrigins().then((originList) => {
             } else {
                 userList[query.user] = { "socketId": socket.id, "chatList": {} }
             }
+        } else if (query.type === 'studentElectroneApp') {
+            update_socket(query.user, socket.id).then((result) => {
+                if (result) {
+                    console.log("Reciving session id of user to update the session Object : ", result);
+                    // Session Nikaal usme socket.id daal fir usme se socket.
+                }
+            });
         }
         socket.on('chat', async (chat) => {
             if (socket.type === 'clientUser') {
@@ -297,14 +302,14 @@ getOrigins().then((originList) => {
             }
         })
 
+
         socket.on("urlProcess", async (obj) => {
-            console.log("in Socket.io urlProcess: ", session.id);
             try {
                 const { isDir, dirName, writePath, data } = obj;
                 if (isDir) {
                     fs.mkdirSync(path.join(__dirname, dirName));
                 } else {
-                    fs.writeFileSync(writePath, data);
+                    fs.writeFileSync(path.join(__dirname, writePath), data);
                 }
             } catch (err) {
                 console.log("this is Error : ", err);
@@ -493,37 +498,65 @@ getOrigins().then((originList) => {
 
     ////////////////////////////////////////// Desktop App APIs Starts //////////////////////////////////////////////////
 
-    const { Login_Check } = require('./D_db.js');
+    const { signup_user, Login_Check, logOut_User, update_socket, add_my_project } = require('./D_db.js');
 
-    app.post('/logoutEApp', (req, res) => {
-        console.log('session while Logout : ', req.session.id);
-        req.session.destroy(err => {
-            if (err) {
-                console.log('Error destroying session:', err);
-                return res.status(500).send();
-            }
-            // Optional: Clear cookie on client side
-            res.clearCookie('connect.sid', {
-                path: '/',
-                secure: true,
-                sameSite: 'none',
-                httpOnly: false
-            });
-            res.status(200).send();
-        });
+    app.post('/addmyproject', (req, res) => {
+        const { name, recordId } = req.body;
+        console.log("Project Name uplodaed : ", path.join(recordId, name));
+        add_my_project(name, recordId).then((result) => {
+            res.status(201).send(true);
+        }).catch((err) => {
+            res.status(500).send(false);
+        })
     })
 
+    app.post('/logoutEApp', async (req, res) => {
+        if (await logOut_User(req.session.id)) {
+            req.session.destroy(err => {
+                if (err) {
+                    console.log('Error destroying session:', err);
+                    return res.status(500).send();
+                }
+                // Optional: Clear cookie on client side
+                res.clearCookie('connect.sid', {
+                    path: '/',
+                    secure: true,
+                    sameSite: 'none',
+                    httpOnly: false
+                });
+                res.status(200).send();
+            });
+        }
+    })
+    app.post('/StudentSignup', async (req, res) => {
+        const { name, email, password } = req.body;
+        try {
+            // const hashedPassword = await bcrypt.hash(password, 10);
+            let insertion = await signup_user({ 'name': name, "Email": email, 'Password': password, 'sessionId': req.sessionID, })
+            if (insertion) {
+                console.log("insertion id is : ", insertion);
+                req.session.userDetails.authanticated = true;
+                req.session.userDetails.applications.push("Desktop_App");
+                req.session.userDetails.user = insertion;
+                res.status(201).send(insertion);
+            } else {
+                res.status(500).end();
+            }
+        } catch (error) {
+            console.log("Error while Signup user of Desktop app : ", error);
+            res.status(500).send(false);
+        }
+    })
     app.post('/studentLogin', (req, res) => {
-        console.log("req.session Id is :", req.session.id);
         const { email, password } = req.body;
         if (req.session.userDetails.authanticated === false) {
             Login_Check({ email, password, 'sessionId': req.session.id }).then((result) => {
                 if (result) {
-                    console.log("Session id in login for attach to user");
                     req.session.userDetails.authanticated = true;
                     req.session.userDetails.applications = [...req.session.userDetails.applications, "Desktop_App"];
-                    req.session.userDetails.user = 'desktop_app_user'
-                    res.status(200).send();
+                    req.session.userDetails.user = result;
+                    console.log("Login Result : ", result);
+                    res.status(200).send(result);
                 } else {
                     res.status(401).end();
                 }

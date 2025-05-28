@@ -14,4 +14,7 @@ function decrypt(hash) {
     const decrypted = Buffer.concat([decipher.update(Buffer.from(hash, 'hex')), decipher.final()]);
     return decrypted.toString();
 }
+
+// console.log(encrypt("this is pass"));
+// console.log(decrypt('9395afc0f3ee333ed140b4f4'));
 module.exports = { encrypt, decrypt };
