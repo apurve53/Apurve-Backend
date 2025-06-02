@@ -1,3 +1,20 @@
-const str = '/home/apurv/Desktop/Assingment';
-let str2 = str.slice(str.lastIndexOf('/') + 1, str.length);
-console.log(str2);
+let arr = [];
+for (i = 1; i <= 100; i++) {
+    arr[i] = false;
+}
+
+
+for (let i = 1; i <= 100; i++) {
+    for (j = 1; j <= 10; j++) {
+        let res = i * j;
+        if (res <= 100) {
+            arr[res] = !arr[res];
+        }
+    }
+}
+
+for (i = 0; i < 100; i++) {
+    if (arr[i] === true) {
+        console.log(arr[i], " :: ", i);
+    }
+}

@@ -1,5 +1,3 @@
-// database name: desktop_app
-// collection name = user
 const { mkdir, mkdirSync } = require('fs');
 const { join } = require('path');
 require('dotenv').config();
@@ -27,15 +25,15 @@ async function Login_Check(obj) {
     try {
         const { email, password, sessionId } = obj;
         const { collection, client } = await newConnection();
-        let user = await collection.findOne(
+        let user = await collection.findOneAndUpdate(
             {
                 'Email': email,
                 'Password': password
             },
+            { $set: { sessionId: sessionId } },
             {
-                projection: {
-                    _id: 1
-                }
+                returnDocument: 'after', // Return updated document
+                projection: { _id: 1, sessionId: 0 } // Return only _id and sessionId
             }
         );
         client.close();
@@ -50,21 +48,16 @@ async function Login_Check(obj) {
 }
 
 async function logOut_User(sessionId) {
+    // console.log("sessionId for logout : ", sessionId)
     const { collection, client } = await newConnection();
     let user = await collection.updateOne({ 'sessionId': sessionId }, { $set: { 'sessionId': "" } })
+    // console.log("user for logout : ", user)
+    client.close();
     if (user.matchedCount === 1 && user.modifiedCount === 1) {
         return true;
     } else {
         return false;
     }
-}
-
-async function userId_DirName(connectionId) {
-    const { collection, client } = await newConnection();
-    const userId = await collection.findOne({ socketId: connectionId }, { projection: { _id: 1 } });
-    console.log("Projection Giving me this Object agains Query : ", userId);
-    client.close();
-    return userId._id;
 }
 
 async function update_socket(recordId, connectionId) {
@@ -76,24 +69,29 @@ async function update_socket(recordId, connectionId) {
             {
                 returnDocument: 'after',
                 projection: {
-                    _id: 0,
-                    sessionId: 1,
+                    _id: 1,
                 }
             }
         );
         client.close();
-        return user.sessionId;
+        return user._id;
     } catch (err) {
         console.log("error in update_socket function in D_db.js file : ", err);
         return false;
     }
 }
 
-// update_socket('68273d3aed82e31d5cf55d1c', '2323qw312').then((result) => {
-//     console.log("result : ", result);
-// }).catch((err) => {
-//     console.log(err);
-// })
+async function get_My_Projects(userId) {
+    try {
+        const { collection, client } = await newConnection();
+        const list = await collection.findOne({ _id: new ObjectId(userId) }, { projection: { _id: 0, Projects: 1 } });
+        client.close();
+        return list.Projects;
+
+    } catch (err) {
+        console.log("error on get my projects : ", err);
+    }
+}
 
 async function add_my_project(projectName, userId) {
     const { collection, client } = await newConnection();
@@ -109,7 +107,6 @@ async function add_my_project(projectName, userId) {
             },
         );
         client.close();
-        console.log("Result for update Uploaded Project : ", result);
         if (result.acknowledged === true && result.matchedCount === 1) {
             return true;
         }
@@ -130,7 +127,6 @@ async function signup_user(newUser) {
         { upsert: true }
     );
     client.close();
-    console.log("Result of Signup : ", result);
     if (result.upsertedCount === 1) {
         const userFolderPath = join(__dirname, "Tute", result.upsertedId.toString());
         mkdir(userFolderPath, (err) => {
@@ -153,45 +149,48 @@ async function deleteAllOtherUsers() {
     client.close();
 
 }
-// deleteAllOtherUsers();
+deleteAllOtherUsers();
 
 // async function GetData() {
-// const { collection, client } = await newConnection();
-// const userId = await collection.findOne(
-//     {
-//         'sessionId': '2QTTQwBJ6N3tSgA2mnj2j-uzPON3ccDP'
-//     },
-//     {
-//         projection: { '_id': 1, 'Email': 0, 'Password': 0,  0, 'sessionId': 0 }
-//     }
-// );
-// console.log("in Db File userId is : ", userId._id.toString());
-// console.log(await logedIn_Id('2QTTQwBJ6N3tSgA2mnj2j-uzPON3ccDP'));
-// }
-
-// GetData();
-// Login_Check({ 'email': "test@example.com", 'password': "passsword123" }).then((result) => {
-//     console.log("result : ", result)
-// }).catch(err => {
-//     console.log(err);
-// })
-
-// async function testUpsert() {
-//     const newUser = {
-//         Email: "exa12mple@email.com",
-//         Name: "John Doe",
-//         Age: 30,
-//         myList: []
-//     };
 //     const { collection, client } = await newConnection();
-//     let result = await collection.updateOne(
-//         { Email: newUser.Email },            // Filter by Email
-//         { $setOnInsert: newUser },           // Only insert if not found
-//         { upsert: true }
+//     const userId = await collection.findOne(
+//         {
+//             _id: new ObjectId("")
+//         },
+//         {
+//             projection: { _id: 0, Projects: 1 }
+//         }
 //     );
-//     console.log("Result Testing Upcert", result);
-//     client.close();
+//     console.log("in Db File userId is : ", userId._id.toString());
+//     console.log(await logedIn_Id('2QTTQwBJ6N3tSgA2mnj2j-uzPON3ccDP'));
 // }
+// GetData();
 
-// testUpsert();
-module.exports = { userId_DirName, signup_user, Login_Check, logOut_User, update_socket, add_my_project }
+/* 
+Login_Check({ 'email': "test@example.com", 'password': "passsword123" }).then((result) => {
+    console.log("result : ", result)
+}).catch(err => {
+    console.log(err);
+})
+
+async function testUpsert() {
+    const newUser = {
+        Email: "exa12mple@email.com",
+        Name: "John Doe",
+        Age: 30,
+        myList: []
+    };
+    const { collection, client } = await newConnection();
+    let result = await collection.updateOne(
+        { Email: newUser.Email },            // Filter by Email
+        { $setOnInsert: newUser },           // Only insert if not found
+        { upsert: true }
+    );
+    console.log("Result Testing Upcert", result);
+    client.close();
+}
+
+testUpsert();*/
+
+
+module.exports = { get_My_Projects, signup_user, Login_Check, logOut_User, update_socket, add_my_project }

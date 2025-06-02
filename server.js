@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const https = require('https');
 const path = require('path');
-const fs = require('fs');
+const { mkdir, appendFileSync, readFileSync, mkdirSync, writeFileSync } = require('fs');
 const logFilePath = path.join(__dirname, 'requests.log');
 const socketIO = require('socket.io');
 const { encrypt, decrypt } = require('./EncriptDecript');
@@ -41,6 +41,7 @@ getOrigins().then((originList) => {
         },
     })
     const sessionStore = sessionMiddleware.store;
+    app.use(express.text());
     app.use(sessionMiddleware);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,7 +61,7 @@ getOrigins().then((originList) => {
         📦 Headers:
         =====================================================
         `;
-        fs.appendFileSync(logFilePath, logData, 'utf8');
+        appendFileSync(logFilePath, logData, 'utf8');
         // console.log(logData);
         next();
     });
@@ -236,10 +237,10 @@ getOrigins().then((originList) => {
 
     // const server = http.createServer(app);
     const options = {
-        key: fs.readFileSync('/etc/letsencrypt/live/worlddevelopment.in/privkey.pem'),
-        cert: fs.readFileSync('/etc/letsencrypt/live/worlddevelopment.in/fullchain.pem')
-        // key: fs.readFileSync('C:/Certbot/archive/worlddevelopment.in/privkey1.pem'),
-        // cert: fs.readFileSync('C:/Certbot/archive/worlddevelopment.in/fullchain1.pem')
+        key: readFileSync('/etc/letsencrypt/live/worlddevelopment.in/privkey.pem'),
+        cert: readFileSync('/etc/letsencrypt/live/worlddevelopment.in/fullchain.pem')
+        // key: readFileSync('C:/Certbot/archive/worlddevelopment.in/privkey1.pem'),
+        // cert: readFileSync('C:/Certbot/archive/worlddevelopment.in/fullchain1.pem')
     };
     const server = https.createServer(options, app);
     ///////////////////////////////////////////// Socket IO Chat Support Starts  ///////////////////////////////////////
@@ -266,7 +267,6 @@ getOrigins().then((originList) => {
     const TARGET_BASE = path.join(__dirname, 'Tute');
     io.on('connection', (socket) => {
         let query = socket.handshake.query;
-        console.log("query is : ", query);
         socket.type = query.type;
         socket.user = query.user; //This is the user Document Id in mongodb.
         if (query.type === "clientUser") {
@@ -280,7 +280,6 @@ getOrigins().then((originList) => {
         } else if (query.type === 'studentElectroneApp') {
             update_socket(query.user, socket.id).then((result) => {
                 if (result) {
-                    console.log("Reciving session id of user to update the session Object : ", result);
                     // Session Nikaal usme socket.id daal fir usme se socket.
                 }
             });
@@ -307,9 +306,9 @@ getOrigins().then((originList) => {
             try {
                 const { isDir, dirName, writePath, data } = obj;
                 if (isDir) {
-                    fs.mkdirSync(path.join(__dirname, dirName));
+                    mkdirSync(path.join(__dirname, dirName))
                 } else {
-                    fs.writeFileSync(path.join(__dirname, writePath), data);
+                    writeFileSync(path.join(__dirname, writePath), data)
                 }
             } catch (err) {
                 console.log("this is Error : ", err);
@@ -498,19 +497,30 @@ getOrigins().then((originList) => {
 
     ////////////////////////////////////////// Desktop App APIs Starts //////////////////////////////////////////////////
 
-    const { signup_user, Login_Check, logOut_User, update_socket, add_my_project } = require('./D_db.js');
+    const { signup_user, Login_Check, logOut_User, update_socket, add_my_project, get_My_Projects } = require('./D_db.js');
+
+    app.post('/get_my_projects', async (req, res) => {
+        let result = await get_My_Projects(req.body);
+        res.status(200).json(result)
+    })
 
     app.post('/addmyproject', (req, res) => {
         const { name, recordId } = req.body;
-        console.log("Project Name uplodaed : ", path.join(recordId, name));
-        add_my_project(name, recordId).then((result) => {
-            res.status(201).send(true);
-        }).catch((err) => {
-            res.status(500).send(false);
-        })
+        mkdir(path.join(__dirname, 'Tute', recordId, name), (err) => {
+            if (err) {
+                res.status(500).send(false);
+            }
+            add_my_project(name, recordId).then((result) => {
+                console.log("Project Created : ", result)
+                res.status(201).send(true);
+            }).catch((err) => {
+                res.status(500).send(false);
+            })
+        });
     })
 
     app.post('/logoutEApp', async (req, res) => {
+        console.log("server logout")
         if (await logOut_User(req.session.id)) {
             req.session.destroy(err => {
                 if (err) {
@@ -524,6 +534,7 @@ getOrigins().then((originList) => {
                     sameSite: 'none',
                     httpOnly: false
                 });
+                console.log("sending logout 200")
                 res.status(200).send();
             });
         }
@@ -532,9 +543,8 @@ getOrigins().then((originList) => {
         const { name, email, password } = req.body;
         try {
             // const hashedPassword = await bcrypt.hash(password, 10);
-            let insertion = await signup_user({ 'name': name, "Email": email, 'Password': password, 'sessionId': req.sessionID, })
+            let insertion = await signup_user({ 'name': name, "Email": email, 'Password': password, 'sessionId': req.sessionID, 'Projects': [] })
             if (insertion) {
-                console.log("insertion id is : ", insertion);
                 req.session.userDetails.authanticated = true;
                 req.session.userDetails.applications.push("Desktop_App");
                 req.session.userDetails.user = insertion;
@@ -584,7 +594,7 @@ getOrigins().then((originList) => {
         // =====================================================
 
         // `;
-        // fs.appendFileSync(logFilePath, logData, 'utf8');
+        // appendFileSync(logFilePath, logData, 'utf8');
         res.redirect('https://worlddevelopment.in');
     })
 
