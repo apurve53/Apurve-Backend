@@ -27,7 +27,7 @@ getOrigins().then((originList) => {
     }
     const sessionMiddleware = session({
         secret: process.env.SEC_FOR_PROT_SERVER,
-        resave: true,
+        resave: false,  //changing to false for testing
         saveUninitialized: true,
         cookie: {
             secure: true,          // Only send over HTTPS
@@ -72,6 +72,7 @@ getOrigins().then((originList) => {
     // res.redirect('http://localhost:5173/');
     // })
     app.post('/checksesstion', (req, res) => {
+        console.log("session : ", req.sessionID);
         try {
             if (!req.session.userDetails) {
                 req.session.userDetails = { authanticated: false, applications: [], user: "new user" };
@@ -264,7 +265,6 @@ getOrigins().then((originList) => {
     io.use((socket, next) => {
         sessionMiddleware(socket.request, {}, next);
     });
-    const TARGET_BASE = path.join(__dirname, 'Tute');
     io.on('connection', (socket) => {
         let query = socket.handshake.query;
         socket.type = query.type;
@@ -278,11 +278,13 @@ getOrigins().then((originList) => {
                 userList[query.user] = { "socketId": socket.id, "chatList": {} }
             }
         } else if (query.type === 'studentElectroneApp') {
-            update_socket(query.user, socket.id).then((result) => {
-                if (result) {
-                    // Session Nikaal usme socket.id daal fir usme se socket.
-                }
-            });
+            if (query.user !== "") { //ye line testing k liye hai watc file k liye
+                update_socket(query.user, socket.id).then((result) => {
+                    if (result) {
+                        // Session Nikaal usme socket.id daal fir usme se socket.
+                    }
+                });
+            }
         }
         socket.on('chat', async (chat) => {
             if (socket.type === 'clientUser') {
@@ -505,15 +507,16 @@ getOrigins().then((originList) => {
     })
 
     app.post('/addmyproject', (req, res) => {
-        const { name, recordId } = req.body;
-        mkdir(path.join(__dirname, 'Tute', recordId, name), (err) => {
+        const { newProject, recordId } = req.body;
+        mkdir(path.join(__dirname, 'Tute', recordId, newProject.name), (err) => {
             if (err) {
                 res.status(500).send(false);
             }
-            add_my_project(name, recordId).then((result) => {
+            add_my_project(newProject, recordId).then((result) => {
                 console.log("Project Created : ", result)
                 res.status(201).send(true);
             }).catch((err) => {
+                console.error("Project creation failed:", err.message);
                 res.status(500).send(false);
             })
         });
@@ -540,10 +543,13 @@ getOrigins().then((originList) => {
         }
     })
     app.post('/StudentSignup', async (req, res) => {
+        console.log("Signup session : ", req.sessionID);
         const { name, email, password } = req.body;
         try {
             // const hashedPassword = await bcrypt.hash(password, 10);
+            console.log(" user cred", name, email, password)
             let insertion = await signup_user({ 'name': name, "Email": email, 'Password': password, 'sessionId': req.sessionID, 'Projects': [] })
+            console.log(" insertion : ", insertion);
             if (insertion) {
                 req.session.userDetails.authanticated = true;
                 req.session.userDetails.applications.push("Desktop_App");

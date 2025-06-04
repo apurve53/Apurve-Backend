@@ -48,10 +48,8 @@ async function Login_Check(obj) {
 }
 
 async function logOut_User(sessionId) {
-    // console.log("sessionId for logout : ", sessionId)
     const { collection, client } = await newConnection();
     let user = await collection.updateOne({ 'sessionId': sessionId }, { $set: { 'sessionId': "" } })
-    // console.log("user for logout : ", user)
     client.close();
     if (user.matchedCount === 1 && user.modifiedCount === 1) {
         return true;
@@ -93,7 +91,7 @@ async function get_My_Projects(userId) {
     }
 }
 
-async function add_my_project(projectName, userId) {
+async function add_my_project(newProject, userId) {
     const { collection, client } = await newConnection();
     try {
         const result = await collection.updateOne(
@@ -102,16 +100,17 @@ async function add_my_project(projectName, userId) {
             },
             {
                 $push: {
-                    Projects: projectName
+                    Projects: newProject
                 }
             },
         );
         client.close();
+
         if (result.acknowledged === true && result.matchedCount === 1) {
             return true;
         }
         else {
-            return false;
+            throw new Error("User not found or project not added.");
         }
     } catch (err) {
         console.log("Error while update User Project : ", err);
@@ -144,12 +143,12 @@ async function signup_user(newUser) {
 
 async function deleteAllOtherUsers() {
     const { collection, client } = await newConnection();
-    const deletedThing = await collection.deleteMany({ Email: { $ne: "test@example.com" } })
+    const deletedThing = await collection.deleteMany({ Email: { $ne: ["test@example.com", "test1@example.com", "test2@example.com"] } })
     console.log("Deleted this : ", deletedThing);
     client.close();
 
 }
-deleteAllOtherUsers();
+// deleteAllOtherUsers();
 
 // async function GetData() {
 //     const { collection, client } = await newConnection();
