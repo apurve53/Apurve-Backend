@@ -15,7 +15,6 @@ const urlFiles = require('./staticFiles');
 const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, insertUser, addUserChat, findUser, getUserChat, handleResetChat, checkUser, getSampleChat } = require('./db');
 require('dotenv').config();
 getOrigins().then((originList) => {
-    // console.log("Origin List : ", originList);
     originList.unshift("https://worlddevelopment.in/chatadminhome");
     originList.unshift("http://localhost:5173");
     originList.unshift(" http://localhost:5174");
@@ -72,7 +71,6 @@ getOrigins().then((originList) => {
     // res.redirect('http://localhost:5173/');
     // })
     app.post('/checksesstion', (req, res) => {
-        console.log("session : ", req.sessionID);
         try {
             if (!req.session.userDetails) {
                 req.session.userDetails = { authanticated: false, applications: [], user: "new user" };
@@ -219,7 +217,6 @@ getOrigins().then((originList) => {
                 res.status(200).json({ samplechat: await getSampleChat() })
             } else {
                 let result = await handleResetChat({ user: decrypt(req.body.user) });
-                console.log("return should true or false : ", result);
                 result ? res.status(200).end() : res.status(401).end();
             }
         } else {
@@ -231,7 +228,6 @@ getOrigins().then((originList) => {
         req.session.destroy(function (err) {
             res.status(200).end();
         });
-        console.log("After Logout the sesstion : ", req.session);
     })
 
     //////////////////////////////////// Here "chat Support" App APIs end//////////////////////////////////////////////////
@@ -409,15 +405,12 @@ getOrigins().then((originList) => {
         res.sendFile(__dirname + '/upwork/index.html');
     })
     app.post('/textsubmition', (req, res) => {
-        console.log(req.body);
         const textToConvert = req.body.text;
-        console.log("Text is :", textToConvert);
         function removeEmojis(text) {
             return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF])/g, '');
         }
         // const longText = "Hello 😊! This is a test message with emojis 🎉🔥🚀 and more 💯✨.";
         const cleanText = removeEmojis(textToConvert);
-        console.log("Cleaned text:", cleanText);
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         res.status(200).send(cleanText);
     })
@@ -435,7 +428,6 @@ getOrigins().then((originList) => {
     /////////////////////////////////////////// Google Sheets Integration API Starts ///////////////////////////////////////
     app.post('/add_to_google_sheet', async (req, res) => {
         const formData = req.body;
-        console.log('Received form data:', Object.keys(formData));
         try {
             const credentials = require('./glassy-iridium-424714-r9-f3b5f1c03794.json');
             const auth = new JWT({
@@ -454,7 +446,6 @@ getOrigins().then((originList) => {
                 if (sheet) {
                     newRow = await sheet.addRow(formData);
                 } else {
-                    console.log("Sheet Title is not found");
                     sheet = await doc.addSheet({ title: 'You need My Developer', headerValues: Object.keys(formData) });
                     newRow = await sheet.addRow(formData);
                 }
@@ -463,7 +454,6 @@ getOrigins().then((originList) => {
                 if (sheet) {
                     newRow = await sheet.addRow(formData);
                 } else {
-                    console.log("New Project Title is not found");
                     sheet = await doc.addSheet({ title: "New Project", headerValues: Object.keys(formData) });
                     newRow = await sheet.addRow(formData);
                 }
@@ -472,7 +462,6 @@ getOrigins().then((originList) => {
                 if (sheet) {
                     newRow = await sheet.addRow(formData);
                 } else {
-                    console.log("Project Contribution Title is not found");
                     sheet = await doc.addSheet({ title: "Project Contribution", headerValues: Object.keys(formData) });
                     newRow = await sheet.addRow(formData);
                 }
@@ -482,7 +471,6 @@ getOrigins().then((originList) => {
                 if (sheet) {
                     newRow = await sheet.addRow(formData);
                 } else {
-                    console.log("Full Time Work Title is not found");
                     sheet = await doc.addSheet({ title: "Full Time Work", headerValues: Object.keys(formData) });
                     newRow = await sheet.addRow(formData);
                 }
@@ -513,7 +501,6 @@ getOrigins().then((originList) => {
                 res.status(500).send(false);
             }
             add_my_project(newProject, recordId).then((result) => {
-                console.log("Project Created : ", result)
                 res.status(201).send(true);
             }).catch((err) => {
                 console.error("Project creation failed:", err.message);
@@ -523,7 +510,6 @@ getOrigins().then((originList) => {
     })
 
     app.post('/logoutEApp', async (req, res) => {
-        console.log("server logout")
         if (await logOut_User(req.session.id)) {
             req.session.destroy(err => {
                 if (err) {
@@ -537,19 +523,15 @@ getOrigins().then((originList) => {
                     sameSite: 'none',
                     httpOnly: false
                 });
-                console.log("sending logout 200")
                 res.status(200).send();
             });
         }
     })
     app.post('/StudentSignup', async (req, res) => {
-        console.log("Signup session : ", req.sessionID);
         const { name, email, password } = req.body;
         try {
             // const hashedPassword = await bcrypt.hash(password, 10);
-            console.log(" user cred", name, email, password)
             let insertion = await signup_user({ 'name': name, "Email": email, 'Password': password, 'sessionId': req.sessionID, 'Projects': [] })
-            console.log(" insertion : ", insertion);
             if (insertion) {
                 req.session.userDetails.authanticated = true;
                 req.session.userDetails.applications.push("Desktop_App");
@@ -571,7 +553,6 @@ getOrigins().then((originList) => {
                     req.session.userDetails.authanticated = true;
                     req.session.userDetails.applications = [...req.session.userDetails.applications, "Desktop_App"];
                     req.session.userDetails.user = result;
-                    console.log("Login Result : ", result);
                     res.status(200).send(result);
                 } else {
                     res.status(401).end();

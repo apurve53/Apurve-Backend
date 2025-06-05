@@ -132,7 +132,6 @@ async function signup_user(newUser) {
             if (err) {
                 return console.error('Error creating directory:', err);
             }
-            console.log("folder Created : ", result.upsertedId.toString());
         });
         return result.upsertedId.toString();
     } else {
@@ -143,12 +142,12 @@ async function signup_user(newUser) {
 
 async function deleteAllOtherUsers() {
     const { collection, client } = await newConnection();
-    const deletedThing = await collection.deleteMany({ Email: { $ne: ["test@example.com", "test1@example.com", "test2@example.com"] } })
+    const deletedThing = await collection.deleteMany({ Password: "password123", Email: { $ne: ["test@example.com", "test1@example.com", "test2@example.com"] } })
     console.log("Deleted this : ", deletedThing);
     client.close();
 
 }
-// deleteAllOtherUsers();
+deleteAllOtherUsers();
 
 // async function GetData() {
 //     const { collection, client } = await newConnection();
