@@ -67,6 +67,8 @@ getOrigins().then((originList) => {
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
     app.use(express.static(__dirname + '/dist'));
     app.use(express.static(__dirname + '/supportChatPublic'));
+    app.use(express.static(__dirname + '/audioVideoFiles'));
+
     // app.get('/', (req, res) => {
     // res.redirect('http://localhost:5173/');
     // })
@@ -564,6 +566,15 @@ getOrigins().then((originList) => {
             res.status(401).end();
         }
     })
+
+    ////////////////////////////////////////Windows app API ends//////////////////////
+
+    app.get('/sendAudio', (req, res) => {
+        console.log("getting Requests")
+        const audioPath = path.join(__dirname, 'audioVideoFiles', 'rain.mp4');
+        res.setHeader('Content-Type', 'video/mp4');
+        res.sendFile(audioPath);
+    });
 
     app.get('*', (req, res) => {
         // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
