@@ -137,7 +137,6 @@ async function signup_user(newUser) {
     } else {
         return false;
     }
-
 }
 
 async function deleteAllOtherUsers() {
@@ -147,7 +146,7 @@ async function deleteAllOtherUsers() {
     client.close();
 
 }
-deleteAllOtherUsers();
+// deleteAllOtherUsers();
 
 // async function GetData() {
 //     const { collection, client } = await newConnection();

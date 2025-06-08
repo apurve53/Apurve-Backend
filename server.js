@@ -68,6 +68,7 @@ getOrigins().then((originList) => {
     app.use(express.static(__dirname + '/dist'));
     app.use(express.static(__dirname + '/supportChatPublic'));
     app.use(express.static(__dirname + '/audioVideoFiles'));
+    app.use(express.static(__dirname + '/otherPages'))
 
     // app.get('/', (req, res) => {
     // res.redirect('http://localhost:5173/');
@@ -301,10 +302,10 @@ getOrigins().then((originList) => {
             }
         })
 
-
         socket.on("urlProcess", async (obj) => {
             try {
                 const { isDir, dirName, writePath, data } = obj;
+                //
                 if (isDir) {
                     mkdirSync(path.join(__dirname, dirName))
                 } else {
@@ -575,6 +576,11 @@ getOrigins().then((originList) => {
         res.setHeader('Content-Type', 'video/mp4');
         res.sendFile(audioPath);
     });
+
+    app.get('/drow', (req, res) => {
+        res.setHeader('Content-Type', 'text/html');
+        res.sendFile(path.join(__dirname, 'drowDynamic.html'));
+    })
 
     app.get('*', (req, res) => {
         // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;

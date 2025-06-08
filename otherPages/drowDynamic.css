@@ -1,0 +1,29 @@
+#clr_btn {
+    height: 30px;
+    width: 70px;
+    background-color: none;
+    border: 2px solid #0ff;
+    position: absolute;
+    z-index: 1;
+    color: #f00;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    bottom: 10px;
+    right: 10px;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+}

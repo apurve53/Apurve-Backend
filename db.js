@@ -30,6 +30,13 @@ async function insertUser(user) {
   }
 }
 
+async function changeChatAppPassword(userName, password) {
+  await client.connect();
+  const database = client.db('chatdata');
+  const collection = database.collection('user');
+  const isUpdated = await collection.updateOne({ "username": userName }, { $set: { 'password': password } });
+  console.log("password changed : ", isUpdated);
+}
 async function findUser(username, pass) {
   await client.connect();
   const database = client.db('chatdata');
@@ -222,4 +229,4 @@ async function getAllChatForAI(userName) {
 
 // console.log(getSampleChat());
 
-module.exports = { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, sendMessageToUser, insertUser, findUser, checkUser, addUserChat, getUserChat, handleResetChat, getSampleChat };
+module.exports = { changeChatAppPassword, getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, sendMessageToUser, insertUser, findUser, checkUser, addUserChat, getUserChat, handleResetChat, getSampleChat };
