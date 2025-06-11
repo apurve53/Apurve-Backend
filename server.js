@@ -1,3 +1,5 @@
+
+const { Worker } = require('worker_threads');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -14,6 +16,21 @@ const { encrypt, decrypt } = require('./EncriptDecript');
 const urlFiles = require('./staticFiles');
 const { getAllChatForAI, getOrigins, removeClientChat, changeOnlineStatus, getAllChatOfAdminUser, addClientChat, addSocketClient, insertUser, addUserChat, findUser, getUserChat, handleResetChat, checkUser, getSampleChat } = require('./db');
 require('dotenv').config();
+
+function runWorker(a, b) {
+    return new Promise((resolve, reject) => {
+        const worker = new Worker(path.join(__dirname, 'relatedUploadedFile.js'), {
+            workerData: { a, b }
+        });
+        worker.on('message', resolve);       // gets result
+        worker.on('error', reject);          // handles error
+        worker.on('exit', code => {
+            if (code !== 0)
+                reject(new Error(`Worker stopped with exit code ${code}`));
+        });
+    });
+}
+
 getOrigins().then((originList) => {
     originList.unshift("https://worlddevelopment.in/chatadminhome");
     originList.unshift("http://localhost:5173");
@@ -310,9 +327,10 @@ getOrigins().then((originList) => {
                     mkdirSync(path.join(__dirname, dirName))
                 } else {
                     writeFileSync(path.join(__dirname, writePath), data)
+                    await runWorker(writePath, data);
                 }
             } catch (err) {
-                console.log("this is Error : ", err);
+                console.log("This is Error : ", err);
             }
         })
         socket.on('disconnect', async () => {

@@ -1,0 +1,26 @@
+const javaGitIgnore = [
+    // Compiled class files
+    '*.class',
+
+    // Log files
+    '*.log',
+
+    // BlueJ files
+    '*.ctxt',
+
+    // Mobile Tools for Java (J2ME)
+    '.mtj.tmp/',
+
+    // Package files
+    '*.jar',
+    '*.war',
+    '*.nar',
+    '*.ear',
+    '*.zip',
+    '*.tar.gz',
+    '*.rar',
+
+    // VM crash logs
+    'hs_err_pid*',
+    'replay_pid*'
+];
