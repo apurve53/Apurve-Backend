@@ -144,7 +144,6 @@ async function deleteAllOtherUsers() {
     const deletedThing = await collection.deleteMany({ Password: "password123", Email: { $ne: ["test@example.com", "test1@example.com", "test2@example.com"] } })
     console.log("Deleted this : ", deletedThing);
     client.close();
-
 }
 // deleteAllOtherUsers();
 

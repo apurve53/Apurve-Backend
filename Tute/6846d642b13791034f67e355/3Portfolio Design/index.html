@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Inline&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron&family=Audiowide&family=Rajdhani&family=Chakra+Petch&family=Syncopate&family=Major+Mono+Display&family=VT323&family=Press+Start+2P&family=Share+Tech+Mono&family=Quantico&family=Merriweather&family=Libre+Baskerville&family=Source+Serif+4&family=Roboto+Slab&family=Playfair+Display&family=IBM+Plex+Serif&family=DM+Serif+Display&family=Mulish&family=Inter&family=Work+Sans&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bungee+Inline&family=Eater&family=Faster+One&family=Frijole&family=Judson&family=Limelight&family=Quintessential&family=UnifrakturMaguntia&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <header>
+        <h1>CyberCraft </h1>
+        <div class="hamburger" onclick="toggleMenu(this)">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="navbar" id="navbar">
+        <a href="#about" onclick="closeMenu()">About</a>
+        <a href="#skills" onclick="closeMenu()">Skills</a>
+        <a href="#projects" onclick="closeMenu()">Projects</a>
+        <a href="#contact" onclick="closeMenu()">Contact</a>
+
+    </nav>
+
+    <section class="section" id="about">
+        <h2>About me </h2>
+        <p class="about">
+            Hi! I'm Cybercraft.<i style="color:#33ccff;"> A passionate and skilled Indian web developer.</i> Proficient
+            in modern web technologies. I love <i style="color:#33ccff;">building beautiful and performant web
+                experiences</i> that solve real-world problems.Highly focused on performance,usability and modern design
+            principles in every project I build.
+        </p>
+        <p class="about">
+            From <i style="color:#33ccff;">HTML, CSS and Javascript</i> to mordern frameworks and animations I love
+            building<i style="color:#33ccff;"> digital,techy and user friendly websites.</i> I focus in delievering
+            smooth and <i style="color:#33ccff;">modern digital servives.</i>
+        </p>
+
+        <p class="about">
+            "I believe that developing is not only a skill. But an art of understanding the <i
+                style="color:#33ccff;">logistics and creating</i> a more powerful technology that helps the <i
+                style="color:#33ccff;">businesses and humans to grow</i>.To learn an art we not only need hard and smart
+            work but also the heart work. "
+        </p>
+    </section>
+    <section class="section" id="skills">
+        <h2>Tech Skills</h2>
+        <div class="certificate-container">
+            <span data-experience="7 years experience in Html">Html</span>
+            <span data-experience="5 years experience in CSS">CSS</span>
+            <span data-experience="3 years experience in Java">Java</span>
+            <span data-experience="3 years experience in Javascript">Javascript</span>
+            <span data-experience="3 years experience in Python">Python</span>
+            <span data-experience="3 years experience in UI/UX">UI/UX</span>
+        </div>
+    </section>
+    <section class="section" id="projects">
+        <h2>My Projects</h2>
+        <div class="portfolio-container">
+            <div class="portfolio-item">
+                <div class="portfolio-title">Calculator app</div>
+                <div class="portfolio-description">My Calculator App is a clean and intuitive app. It was designed to
+                    perform basic arithmetic operations.It was built using Html, CSS and Javascript.</div>
+                <a href="https://sololearn.com/compiler-playground/WIDAV0VgUxkN/?ref=app">View My Project</a>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-title">To-do list app</div>
+                <div class="portfolio-description">One of my best projects. This app was designed to plan your day. And
+                    the UI of this app will definitely impress you. It was also built in Html, CSS and Javascript.</div>
+                <a href="https://sololearn.com/compiler-playground/W6zlY5JiwtY2/?ref=app">View My Project</a>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-title">Magical Animation 2.0</div>
+                <div class="portfolio-description">As a coder we love to create animations. But this one was magical and
+                    I built it using Html and CSS only. </div>
+                <a href="https://sololearn.com/compiler-playground/W0u6Wa28tqCi/?ref=app">View My Project</a>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-title">Quotes Generator app</div>
+                <div class="portfolio-description">This one of my upcoming projects and It is also an intresting app. It
+                    will help you to think differently. And you will love it for sure.</div>
+                <a href="#">This app will be available.</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <h2>Get in touch </h2>
+        <div class="contact">
+            <form>
+                <input type="text" placeholder="Your Name" required />
+                <input type="email" placeholder="Your Email" required />
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+    <section class="section" id="social">
+        <h2>Connect with Me</h2>
+        <div class="social-shuffle">
+
+            <div class="social-card instagram">
+                <a href="https://www.instagram.com/codewithme2026?igsh=MTV1ODQ4MjBqODVmaA==">
+                    <i class="fab fa-instagram"></i>
+                    <span class="username">@codewithme2026</span>
+                    <span class="followers">600 Followers</span></a>
+            </div>
+            <div class="social-card github">
+
+                <i class="fab fa-github"></i>
+                <span class="username">CyberCraftDev</span>
+                <span class="followers">4.8K Followers</span>
+            </div>
+
+            <div class="social-card youtube">
+                <a href="https://youtube.com/@coderhimani320?si=eUC-BzkYwd7yfCLM">
+                    <i class="fab fa-youtube"></i>
+                    <span class="username">Coding Channel</span>
+                    <span class="followers">682 Followers</span></a>
+            </div>
+            <div class="social-card linkedin">
+                <i class="fab fa-linkedin"></i>
+                <span class="username">CyberCraft</span>
+                <span class="followers">6.1K Followers</span>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        &copy; 2025 Cybercraft Portfolio. All rights reserved.
+    </footer>
+
+    <script>
+        function toggleMenu(el) {
+            el.classList.toggle("active");
+            document.getElementById("navbar").classList.toggle("open");
+        }
+
+        function closeMenu() {
+            document.getElementById("navbar").classList.remove("open");
+            document.querySelector(".hamburger").classList.remove("active");
+        }
+    </script>
+</body>
+
+</html>

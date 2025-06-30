@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth or Dare</title>
+
+    <!-- Google Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --md-bg: #ffffff;
+            --md-surface: #f5f5f5;
+            --md-primary: #1a73e8;
+            --md-secondary: #e8f0fe;
+            --md-text: #202124;
+            --md-card: #ffffff;
+            --md-btn: #e8f0fe;
+        }
+
+        body.dark {
+            --md-bg: #121212;
+            --md-surface: #1e1e1e;
+            --md-primary: #8ab4f8;
+            --md-secondary: #2a2a2a;
+            --md-text: #e8eaed;
+            --md-card: #2a2a2a;
+            --md-btn: #3c4043;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--md-bg);
+            color: var(--md-text);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            background: var(--md-card);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--md-primary);
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--md-btn);
+            color: var(--md-text);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--md-secondary);
+        }
+
+        .output {
+            font-size: 0.95rem;
+            padding: 12px;
+            background: var(--md-surface);
+            border-radius: 12px;
+            min-height: 60px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--md-primary);
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="material-icons">dark_mode</span>
+    </button>
+
+    <div class="container">
+        <h1>Truth or Dare</h1>
+        <div class="button-group">
+            <button onclick="getQ('truth')">Truth</button>
+            <button onclick="getQ('dare')">Dare</button>
+        </div>
+        <div class="output" id="qBox">Tap a button to begin</div>
+    </div>
+
+    <script>
+        const truths = [
+            "What’s the most embarrassing thing in your search history?",
+            "Have you ever liked someone in this room? Say their name.",
+            "What’s a secret you’ve never told your parents?",
+            "What's a lie you told to get out of a date or party?",
+            "Have you ever stalked an ex online?",
+            "Who’s the last person you dreamt about?",
+            "What’s your go-to excuse when you want to ghost someone?",
+            "What’s the worst romantic message you’ve sent or received?",
+            "What secret on your phone would worry you the most if revealed?",
+            "Have you flirted just for free food or a favor?"
+        ];
+
+        const dares = [
+            "Post “I’m joining a circus. Wish me luck!” on social media.",
+            "DM your crush or ex and ask for a fun fact. Screenshot it.",
+            "Use a seductive voice to read snack ingredients.",
+            "Wear socks on your hands for the next 3 rounds.",
+            "Pretend your shoe is a phone and talk to it.",
+            "Speak only in rhymes for 5 minutes.",
+            "Go outside and yell “I love pizza more than people!”",
+            "Call someone and sing your most-played song chorus.",
+            "Swap an item of clothing with the person to your left.",
+            "Set your profile pic to your ugliest face for 10 minutes."
+        ];
+
+        function getQ(type) {
+            const arr = type === 'truth' ? truths : dares;
+            const question = arr[Math.floor(Math.random() * arr.length)];
+            document.getElementById('qBox').textContent = question;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const icon = document.querySelector('.theme-toggle .material-icons');
+            icon.textContent = document.body.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+        }
+    </script>
+</body>
+
+</html>

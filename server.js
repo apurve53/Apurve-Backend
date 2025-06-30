@@ -1,4 +1,3 @@
-
 const { Worker } = require('worker_threads');
 const express = require('express');
 const session = require('express-session');
@@ -22,11 +21,12 @@ function runWorker(a, b) {
         const worker = new Worker(path.join(__dirname, 'relatedUploadedFile.js'), {
             workerData: { a, b }
         });
-        worker.on('message', resolve);       // gets result
-        worker.on('error', reject);          // handles error
+        worker.on('message', resolve);
+        worker.on('error', reject);
         worker.on('exit', code => {
-            if (code !== 0)
+            if (code !== 0) {
                 reject(new Error(`Worker stopped with exit code ${code}`));
+            }
         });
     });
 }
@@ -588,6 +588,15 @@ getOrigins().then((originList) => {
 
     ////////////////////////////////////////Windows app API ends//////////////////////
 
+    ////////////////////////////////////////Ryum Tech Starts///////////////////////////////////
+    app.use('/rymtech', express.static(path.join(__dirname, 'ryum tech')));
+    app.use(express.static(__dirname + '/ryum tech'))
+    app.get('/rymtech', (req, res) => {
+        res.sendFile(path.join(__dirname, 'ryum tech', 'index.html'));
+    });
+
+    ///////////////////////////////////////Extras///////////////////////////////////////
+
     app.get('/sendAudio', (req, res) => {
         console.log("getting Requests")
         const audioPath = path.join(__dirname, 'audioVideoFiles', 'rain.mp4');
@@ -599,6 +608,7 @@ getOrigins().then((originList) => {
         res.setHeader('Content-Type', 'text/html');
         res.sendFile(path.join(__dirname, 'drowDynamic.html'));
     })
+    ///////////////////////////////////////Extras ends///////////////////////////////////////
 
     app.get('*', (req, res) => {
         // const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;

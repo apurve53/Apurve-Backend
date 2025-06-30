@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="block.css">
+
+    <title>Animation</title>
+</head>
+
+<body>
+    <div id="block" class="block">
+        <div id="top" class="wall top"></div>
+        <div id="bottom" class="wall bottom"></div>
+        <div id="left" class="wall left"></div>
+        <div id="right" class="wall right"></div>
+        <div id="front" class="wall front"></div>
+        <div id="back" class="wall back"></div>
+    </div>
+    <div class="expend"></div>
+    <div id="firstdiv" class="color-animation"></div>
+    <div id="line"></div>
+    <iframe class="my-iframe" src="packman.html"></iframe>
+    <textarea id="chattext" cols="30" rows="10">sdfsf</textarea>
+</body>
+
+<script>
+    // when I am using js for changing angle of the rotate transition on div for scale in 1 second is no working.
+    let block = document.getElementById("block");
+    let angle = 0
+    const rotates = setInterval(() => {
+        angle > 20 ? amgle = 0 : angle = angle;
+        block.style.transform = `rotate(${angle = angle + 90}deg)`;
+        if (angle >= 360) {
+            angle = 90;
+        }
+    }, 2000)
+
+    let topDiv = document.getElementById("top");
+    let bottomDiv = document.getElementById("bottom");
+    let frontDiv = document.getElementById("front");
+    let backDiv = document.getElementById("back");
+    let rightDiv = document.getElementById("right");
+    let leftDiv = document.getElementById("left");
+
+    setInterval(() => {
+        topDiv.style.backgroundColor = genrateColor();
+        bottomDiv.style.backgroundColor = genrateColor();
+        frontDiv.style.backgroundColor = genrateColor();
+        backDiv.style.backgroundColor = genrateColor();
+        rightDiv.style.backgroundColor = genrateColor();
+        leftDiv.style.backgroundColor = genrateColor();
+    }, 2000);
+
+    function genrateColor() {
+        let redColor = 0;
+        let greenColor = 0;
+        let blueColor = 0;
+        let maxNum = 225;
+
+        redColor = Math.round(Math.abs(Math.random() * 300));
+        greenColor = Math.round(Math.abs(Math.random() * 300));
+        blueColor = Math.round(Math.abs(Math.random() * 300));
+
+        while (redColor > maxNum) {
+            redColor = Math.round(Math.abs(Math.random() * 300));
+        }
+        while (greenColor > maxNum) {
+            greenColor = Math.round(Math.abs(Math.random() * 300));
+        }
+        while (blueColor > maxNum) {
+            blueColor = Math.round(Math.abs(Math.random() * 300));
+        }
+        return `rgb(${redColor}, ${greenColor}, ${blueColor})`;
+    }
+
+</script>
+
+</html>

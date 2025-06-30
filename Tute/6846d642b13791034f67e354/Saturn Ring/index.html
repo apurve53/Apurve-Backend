@@ -1,0 +1,436 @@
+<!-- This animaion was created from my imagination A place ehere i can feel and drift of sll the stress My world The colors are on of my favorite calming colors I made dofferent versions Milly🩷 said she loved this one so I decided to post it here it is -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saturn Calming Space ☄️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0524 0%, #1a0933 100%);
+            color: white;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(15, 5, 36, 0.7);
+            border-radius: 15px;
+            border: 2px solid transparent;
+            position: relative;
+            animation: neonPulse 4s infinite alternate;
+        }
+
+        .intro::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 15px;
+            padding: 2px;
+            background: linear-gradient(135deg, #ff6ec7, #ffc300, #ffb347);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-weight: 300;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #ff6ec7, #ffc300);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        p {
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff6ec7, #ffc300);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 195, 0, 0.5);
+        }
+
+        .play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(255, 195, 0, 0.8);
+        }
+
+        .saturn-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 2rem auto;
+        }
+
+        .planet {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #ff6ec7, #3d0066);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow:
+                0 0 60px rgba(255, 110, 199, 0.6),
+                inset 20px 0 40px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .ring {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top-color: rgba(255, 195, 0, 0.8);
+            border-right-color: rgba(255, 179, 71, 0.6);
+            border-bottom-color: rgba(255, 110, 199, 0.4);
+            border-left-color: rgba(255, 179, 71, 0.6);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            animation: rotateRing 20s linear infinite;
+            z-index: 1;
+        }
+
+        .ring::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top-color: rgba(255, 179, 71, 0.4);
+            border-right-color: rgba(255, 110, 199, 0.2);
+            border-bottom-color: rgba(255, 195, 0, 0.1);
+            border-left-color: rgba(255, 110, 199, 0.2);
+            top: -8px;
+            left: -8px;
+            transform: rotate(15deg);
+        }
+
+        .ring-outer {
+            width: 300px;
+            height: 300px;
+            border-top-color: rgba(255, 110, 199, 0.3);
+            border-right-color: rgba(255, 195, 0, 0.2);
+            border-bottom-color: rgba(255, 179, 71, 0.1);
+            border-left-color: rgba(255, 195, 0, 0.2);
+            animation: rotateRingOuter 25s linear infinite reverse;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0;
+        }
+
+        .constellation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .constellation-line {
+            position: absolute;
+            background: rgba(255, 110, 199, 0.1);
+            height: 1px;
+            transform-origin: left center;
+        }
+
+        .constellation-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ff6ec7;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .audio-btn {
+            background: rgba(255, 110, 199, 0.1);
+            border: 1px solid rgba(255, 195, 0, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: rgba(255, 195, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        @keyframes rotateRing {
+            from {
+                transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg);
+            }
+        }
+
+        @keyframes rotateRingOuter {
+            from {
+                transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        @keyframes neonPulse {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 110, 199, 0.3), 0 0 20px rgba(255, 195, 0, 0.3);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(255, 110, 199, 0.6), 0 0 40px rgba(255, 195, 0, 0.6);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="constellation" id="constellation"></div>
+
+    <div class="container">
+        <div class="intro" id="intro">
+            <h1>Somewhere in the orbit of healing, I found Saturn</h1>
+            <p>Still, glowing, unbothered.</p>
+            <p>This animation is a quiet space to reflect, drift, and feel.</p>
+            <p>Inspired by SZA's Saturn, it's for anyone who's ever wanted to leave Earth behind just to breathe again.
+            </p>
+            <button class="play-btn" id="playBtn">Begin Journey</button>
+        </div>
+
+        <div class="saturn-container hidden" id="saturnContainer">
+            <div class="planet"></div>
+            <div class="ring"></div>
+            <div class="ring ring-outer"></div>
+        </div>
+    </div>
+
+    <div class="audio-controls hidden" id="audioControls">
+        <button class="audio-btn" id="playPauseBtn">▶</button>
+        <button class="audio-btn" id="muteBtn">🔊</button>
+    </div>
+
+    <audio id="saturnAudio" loop>
+        <source src="https://worlddevelopment.in/rain.mp4" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elements
+            const intro = document.getElementById('intro');
+            const playBtn = document.getElementById('playBtn');
+            const saturnContainer = document.getElementById('saturnContainer');
+            const starsContainer = document.getElementById('stars');
+            const constellation = document.getElementById('constellation');
+            const audioControls = document.getElementById('audioControls');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const audio = document.getElementById('saturnAudio');
+
+            // Create stars
+            function createStars() {
+                const count = 200;
+                for (let i = 0; i < count; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.width = `${Math.random() * 3 + 1}px`;
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = `${Math.random() * 5}s`;
+                    star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                    starsContainer.appendChild(star);
+                }
+            }
+
+            // Create constellation
+            function createConstellation() {
+                // Create constellation dots
+                const dotCount = 30;
+                for (let i = 0; i < dotCount; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('constellation-dot');
+                    dot.style.left = `${Math.random() * 100}%`;
+                    dot.style.top = `${Math.random() * 100}%`;
+                    constellation.appendChild(dot);
+                }
+
+                // Create Connectign lines
+                const dots = document.querySelectorAll('.constellation-dot');
+                const lineCount = Math.floor(dotCount / 2);
+
+                for (let i = 0; i < lineCount; i++) {
+                    const startDot = dots[Math.floor(Math.random() * dots.length)];
+                    const endDot = dots[Math.floor(Math.random() * dots.length)];
+
+                    if (startDot !== endDot) {
+                        const line = document.createElement('div');
+                        line.classList.add('constellation-line');
+
+                        const startRect = startDot.getBoundingClientRect();
+                        const endRect = endDot.getBoundingClientRect();
+
+                        const startX = startRect.left + startRect.width / 2;
+                        const startY = startRect.top + startRect.height / 2;
+                        const endX = endRect.left + endRect.width / 2;
+                        const endY = endRect.top + endRect.height / 2;
+
+                        const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                        const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+
+                        line.style.width = `${length}px`;
+                        line.style.left = `${startX}px`;
+                        line.style.top = `${startY}px`;
+                        line.style.transform = `rotate(${angle}deg)`;
+
+                        constellation.appendChild(line);
+                    }
+                }
+            }
+
+            // Initialize
+            createStars();
+            createConstellation();
+
+            // Play button click 
+            playBtn.addEventListener('click', function () {
+                intro.classList.add('hidden');
+                saturnContainer.classList.remove('hidden');
+                audioControls.classList.remove('hidden');
+
+                // Audio 
+                audio.play().catch(e => {
+                    console.log("Audio playback failed:", e);
+                    playPauseBtn.textContent = "▶";
+                });
+            });
+
+            // Audio controls
+            playPauseBtn.addEventListener('click', function () {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.textContent = "⏸";
+                } else {
+                    audio.pause();
+                    playPauseBtn.textContent = "▶";
+                }
+            });
+
+            muteBtn.addEventListener('click', function () {
+                audio.muted = !audio.muted;
+                muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+            });
+
+            // Handle visibility 
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    audio.pause();
+                    playPauseBtn.textContent = "▶";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

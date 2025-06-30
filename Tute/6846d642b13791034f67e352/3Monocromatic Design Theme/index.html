@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monochromatic Design Theme</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="color-transition"></div>
+
+    <header>
+        <div class="palette-controls">
+            <button class="palette-btn" id="new-palette" title="Generate new palette">
+                <i class="fas fa-palette"></i>
+            </button>
+            <button class="palette-btn" id="info-toggle" title="Design principle">
+                <i class="fas fa-info"></i>
+            </button>
+        </div>
+
+        <h1>Monochromatic Design System</h1>
+        <p class="header-subtitle">
+            Exploring the power of single-hue color systems in UI design
+        </p>
+    </header>
+
+    <nav>
+        <a href="#introduction"><i class="fas fa-book"></i> Introduction</a>
+        <a href="#aesthetic"><i class="fas fa-paint-brush"></i> Aesthetic</a>
+        <a href="#hierarchy"><i class="fas fa-layer-group"></i> Hierarchy</a>
+        <a href="#palette"><i class="fas fa-swatchbook"></i> Palette</a>
+        <a href="#conclusion"><i class="fas fa-bullseye"></i> Conclusion</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduction" class="fade-in">
+            <h2><i class="fas fa-book"></i> Art of Monochrome</h2>
+            <p>
+                In this world of digital design, <strong>simplicity is power</strong>.
+                Among the most refined design system is the <strong>monochromatic color palette</strong>, a technique
+                where a single base hue is manipulated in saturation and lightness to produce a full range of tones.
+                Despite relying on just one color family, monochromatic designs are <strong>rich in emotional
+                    depth</strong>, visually cohesive, and universally admired for their minimalistic aesthetic.
+            </p>
+
+            <div class="design-principle slide-up">
+                <h3>Why use a monochromatic design theme?</h3>
+                <ol>
+                    <li>
+                        <strong>Cohesion Without Complexity</strong>
+                        <p>Monochromatic palettes eliminate visual noise. With only one hue in play, everything feels
+                            like it belongs together, creating a seamless experience where content, not color confusion,
+                            takes the spotlight.</p>
+                    </li>
+                    <li>
+                        <strong>Aesthetic Clarity</strong>
+                        <p>These palettes are visually balanced and harmonious, automatically adhering to the principles
+                            of color theory. They lend an elegant and modern look, often found in portfolios,
+                            dashboards, and branding sites.</p>
+                    </li>
+                    <li>
+                        <strong>Mood Consistency</strong>
+                        <p>Since the design sticks to one hue, the emotional tone stays consistent, allowing designers
+                            to craft focused emotional responses.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="aesthetic" class="fade-in">
+            <h2><i class="fas fa-paint-brush"></i> Aesthetic Nature</h2>
+
+            <div class="design-principle slide-up">
+                <h3>Monochromatic Harmony</h3>
+                <p>
+                    This design uses variations in lightness and saturation of a single hue to create a cohesive,
+                    harmonious look. The monochromatic approach provides visual unity while allowing sufficient contrast
+                    for functional
+                    interfaces.
+                </p>
+            </div>
+
+            <div class="design-principle slide-up">
+                <h3>Emotional Resonance</h3>
+                <p>
+                    Each hue evokes different psychological responses. By sticking to one hue family, we create a
+                    distinct mood throughout the experience.
+                    The current hue is <span id="hue-name" class="hue-name"><strong>Blue</strong></span>
+                </p>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Hue</th>
+                            <th>Mood Created</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Blue</strong></td>
+                            <td>Calm, professional, trustworthy</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Green</strong></td>
+                            <td>Peaceful, natural, growth-oriented</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Red</strong></td>
+                            <td>Bold, urgent, passionate</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orange</strong></td>
+                            <td>Energetic, creative, friendly</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Purple</strong></td>
+                            <td>Mysterious, luxurious, futuristic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yellow</strong></td>
+                            <td>Joyful, optimistic, youthful</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gray</strong></td>
+                            <td>Neutral, modern, minimalistic</td>
+                        </tr>
+                    </table>
+                </div>
+                <p>
+                    While lighter shades are soothing and airy, darker ones add structure and power.
+                    The beauty of monochrome is that you can use <strong>light-dark range to establish
+                        hierarchy</strong>
+                    without breaking emotional consistency.
+                </p>
+            </div>
+        </section>
+
+        <section id="hierarchy" class="fade-in">
+            <h2><i class="fas fa-layer-group"></i> Visual Hierarchy</h2>
+
+            <div class="design-principle slide-up">
+                <h3>Contrast Through Lightness</h3>
+                <p>
+                    We establish hierarchy by varying lightness levels - darker appears more important.
+                    Notice how the header uses the darkest variation while background uses the lightest.
+                </p>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Tone</th>
+                            <th>Usage</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Dark Tone</strong></td>
+                            <td>for text, bold accents, or shadow backgrounds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Medium tones</strong></td>
+                            <td>in headers, buttons, and brand elements</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Light tones</strong></td>
+                            <td>for secondary backgrounds or hover highlights</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Very light</strong></td>
+                            <td>as main background, spacing buffers, or section fills</td>
+                        </tr>
+                    </table>
+                </div>
+                <p>
+                    Each lightness level feels naturally "closer" or "further" from the viewer.
+                </p>
+            </div>
+
+            <div class="design-principle slide-up">
+                <h3>Saturation Adjustments</h3>
+                <p>
+                    While monochromatic designs stay within the same hue, you can also vary saturation:
+                <ul class="saturation-list">
+                    <li><strong>High saturation</strong> = bold, vibrant → draw attention</li>
+                    <li><strong>Low saturation</strong> = dull, muted → background roles</li>
+                </ul>
+                Saturation variation subtly signals depth and importance.
+                </p>
+            </div>
+        </section>
+
+        <section id="palette" class="fade-in">
+            <h2><i class="fas fa-swatchbook"></i> Color Palette</h2>
+
+            <div class="color-swatch slide-up">
+                <div class="swatch-item dark-tone">Dark</div>
+                <div class="swatch-item primary-tone">Primary</div>
+                <div class="swatch-item light1-tone">Light 1</div>
+                <div class="swatch-item light2-tone">Light 2</div>
+            </div>
+
+            <p class="palette-info">This palette uses HSL (Hue, Saturation, Lightness) values derived from a single base
+                hue. The current hue is <strong id="hue-value">0°</strong>.</p>
+
+            <div class="btn-group">
+                <button class="btn pulse-on-hover" id="warm-palette"><i class="fas fa-fire"></i> Warm Tones</button>
+                <button class="btn pulse-on-hover" id="cool-palette"><i class="fas fa-snowflake"></i> Cool
+                    Tones</button>
+                <button class="btn pulse-on-hover" id="random-palette"><i class="fas fa-random"></i> Random</button>
+            </div>
+        </section>
+
+        <section id="conclusion" class="fade-in">
+            <h2><i class="fas fa-bullseye"></i> Conclusion</h2>
+            <p>
+                Monochromatic design is more than a style, it's a <strong>visual language of emotion</strong> and
+                usability.
+                By selecting a base hue and crafting its variations with intention, designers can create clean, calming,
+                and consistent interfaces that respect the user's attention while delivering mood-rich storytelling.
+            </p>
+            <p>
+                Next time you build a brand, portfolio, or app UI, ask yourself: <i>What do I want my users to
+                    feel?</i><br>
+                Then let one color do all the talking.
+            </p>
+        </section>
+    </div>
+
+    <footer class="slide-up">
+        <p>Monochromatic Design System Explorer</p>
+        <p class="footer-subtext">
+            Click the palette button (<i class="fas fa-palette"></i>) to generate new color schemes
+        </p>
+    </footer>
+
+    <script src="./theme.js"></script>
+</body>
+
+</html>

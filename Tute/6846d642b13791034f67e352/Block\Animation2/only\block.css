@@ -1,0 +1,115 @@
+.block {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: scale(1, 1);
+    transition: transform 1s linear;
+    scale: 0.33;
+}
+
+.block:hover {
+    transform: scale(1.3, 1.3);
+}
+
+.wall {
+    position: absolute;
+}
+
+.wall.top {
+    top: 20px;
+    left: 79px;
+    width: 199px;
+    height: 72px;
+    transform: skew(-45deg);
+}
+
+.wall.bottom {
+    bottom: -53px;
+    left: 82px;
+    width: 100%;
+    height: 73px;
+    transform: skew(-45deg);
+}
+
+.wall.left {
+    top: 53px;
+    left: 45px;
+    width: 73px;
+    height: 165px;
+    transform: skew(0deg, 137deg);
+}
+
+.wall.front {
+    top: 91px;
+    left: 46px;
+    width: 195px;
+    height: 161px;
+}
+
+.wall.right {
+    top: 57px;
+    left: 241px;
+    width: 76px;
+    height: 161px;
+}
+
+.wall.back {
+    top: 20px;
+    width: 100%;
+    height: 160px;
+    transform: skew(1deg);
+}
+
+.top {
+    z-index: 1;
+    background-color: #0066ff;
+    opacity: 0.6;
+    transition: background-color 1s;
+}
+
+.bottom {
+    background-color: rgb(0, 34, 255);
+    transition: background-color 1s;
+}
+
+.back {
+    background-color: rgb(0, 255, 42);
+    left: 116px;
+    z-index: 0;
+    transition: background-color 1s;
+}
+
+.front {
+    background-color: rebeccapurple;
+    z-index: 4;
+    opacity: 0.7;
+    transition: background-color 1s;
+}
+
+.right {
+    background-color: #ffd700;
+    transform: skew(1deg, -45deg);
+    z-index: 1;
+    opacity: 0.7;
+    transition: background-color 1s;
+}
+
+.left {
+    background-color: #0f0d02;
+    opacity: 0.3;
+    z-index: 3;
+    transition: background-color 1s;
+}
+
+.expend {
+    width: 60px;
+    height: 20px;
+    background-color: rgb(119, 73, 17);
+    transition: width 1s ease-in;
+}
+
+.expend:hover {
+    width: 250px;
+}

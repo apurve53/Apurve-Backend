@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        div.positive {
+            position: absolute;
+            left: 60px;
+            width: 20px;
+            height: 10px;
+            margin-top: 30px;
+            background-color: #32CD32;
+            transform: rotate(-10deg);
+            border-radius: 0px 7px 0px 0px
+        }
+
+        div.negative {
+            position: absolute;
+            left: 60px;
+            width: 20px;
+            height: 10px;
+            margin-top: 30px;
+            background-color: #32CD32;
+            transform: rotate(10deg);
+            border-radius: 0px 1px 7px 0px;
+        }
+
+        div.main {
+            width: 31px;
+            height: 37px;
+            background-color: #32CD32;
+            position: absolute;
+            top: 26px;
+            left: 30px;
+            border-radius: 13px 0px 0px 13px;
+        }
+
+        div.container {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            transform: rotate(90deg);
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="container" class="container">
+        <div class="main"></div>
+        <div id="pos" class="positive"></div>
+        <br />
+        <div id="neg" class="negative"></div>
+    </div>
+</body>
+<script>
+    let upper = document.getElementById("pos");
+    let lower = document.getElementById("neg");
+
+    let container = document.getElementById("container");
+    let left = 18;
+    setInterval(() => {
+        container.style.left = `${left++}px`
+        if (upper.style.transform == "rotate(-10deg)") {
+            upper.style.transform = "rotate(10deg)";
+            lower.style.transform = "rotate(-10deg)";
+        } else {
+            upper.style.transform = "rotate(-10deg)";
+            lower.style.transform = "rotate(10deg)";
+        }
+        if (left == 354) {
+            left = 18;
+        }
+    }, 100)
+</script>
+
+</html>
