@@ -16,5 +16,5 @@ function decrypt(hash) {
 }
 
 // console.log(encrypt("this is pass"));
-// console.log(decrypt('9395afc0f3ee333ed140b4f4'));
+console.log(decrypt('868db3c1a5e2722e901587e0dfe998b8a0d5887e'));
 module.exports = { encrypt, decrypt };

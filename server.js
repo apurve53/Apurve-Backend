@@ -36,7 +36,12 @@ getOrigins().then((originList) => {
     originList.unshift("http://localhost:5173");
     originList.unshift(" http://localhost:5174");
     originList.unshift("https://apurve53.github.io");
+    originList.unshift("http://192.168.1.10:5173");
     const app = express();
+    app.use((req, res, next) => {
+        console.log(req.ip);
+        next();
+    })
     const corsOptions = {
         origin: originList,
         credentials: true,
@@ -64,6 +69,17 @@ getOrigins().then((originList) => {
     app.use(cors(corsOptions));
     const filesURL = urlFiles.getAllFilesUrls();
     app.use((req, res, next) => {
+        console.log("sub Domain Middleware");
+        const subdomain = req.hostname.split('.')[0]; // e.g. "apurve" from apurve.worlddevelopment.in
+        if (subdomain === 'worlddevelopment' || req.hostname === 'worlddevelopment.in') {
+            req.subdomain = null; // root domain
+        } else {
+            req.subdomain = subdomain;
+        }
+        next();
+    });
+    app.use((req, res, next) => {
+        // rynumtech.png ka url aata ahi to console kara kar dekho ki kitni baar aata hai logs me. 
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
         const logData = `
         ==================== New Request ====================
@@ -78,7 +94,6 @@ getOrigins().then((originList) => {
         =====================================================
         `;
         appendFileSync(logFilePath, logData, 'utf8');
-        // console.log(logData);
         next();
     });
     /////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
@@ -86,10 +101,39 @@ getOrigins().then((originList) => {
     app.use(express.static(__dirname + '/supportChatPublic'));
     app.use(express.static(__dirname + '/audioVideoFiles'));
     app.use(express.static(__dirname + '/otherPages'))
+    app.use(express.static(__dirname + '/baseFiles'))
+
 
     // app.get('/', (req, res) => {
     // res.redirect('http://localhost:5173/');
     // })
+    //Poker Server ///////////////////////////////////////////////////////////////////////////////
+    const { Login_Check } = require('./PokerDb.js');
+    app.post("/poker_login", async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            if (req.session.userDetails.authanticated === false) {
+                const userStatus = await Login_Check({ email, password });
+                if (!userStatus.user) {
+                    res.status(402);
+                } else {
+                    let encUserName = encrypt(username);
+                    req.session.userDetails = { authanticated: true, applications: ["supportchat"], user: encUserName };
+                    res.status(200).json({ user: encUserName });
+                }
+            } else {
+                res.status(400).end();
+            }
+        } catch (err) {
+            console.log("err : ", err);
+        }
+
+    })
+    app.post('/getdimention', (req, res) => {
+        console.log("this is ")
+        console.log("dimentions : ", req.body);
+        res.status(200).json({});
+    })
     app.post('/checksesstion', (req, res) => {
         try {
             if (!req.session.userDetails) {
@@ -303,6 +347,7 @@ getOrigins().then((originList) => {
             }
         }
         socket.on('chat', async (chat) => {
+            console.log("got Chat : ", chat);
             if (socket.type === 'clientUser') {
                 let adminUser = clientList[socket.id]["user"];
                 if (Object.keys(userList).includes(adminUser)) {
@@ -350,7 +395,6 @@ getOrigins().then((originList) => {
         });
     });
     ///////////////////////////////////////////// Socket IO Chat Support Ends ///////////////////////////////////////
-
 
     ///////////////////////////////////////////// SBM Digital API Starts ///////////////////////////////////////
     module.exports = app;
@@ -449,6 +493,7 @@ getOrigins().then((originList) => {
     /////////////////////////////////////////// Google Sheets Integration API Starts ///////////////////////////////////////
     app.post('/add_to_google_sheet', async (req, res) => {
         const formData = req.body;
+        console.log("Project Query is : ", formData);
         try {
             const credentials = require('./glassy-iridium-424714-r9-f3b5f1c03794.json');
             const auth = new JWT({
@@ -509,6 +554,7 @@ getOrigins().then((originList) => {
     ////////////////////////////////////////// Desktop App APIs Starts //////////////////////////////////////////////////
 
     const { signup_user, Login_Check, logOut_User, update_socket, add_my_project, get_My_Projects } = require('./D_db.js');
+
 
     app.post('/get_my_projects', async (req, res) => {
         let result = await get_My_Projects(req.body);
@@ -589,10 +635,10 @@ getOrigins().then((originList) => {
     ////////////////////////////////////////Windows app API ends//////////////////////
 
     ////////////////////////////////////////Ryum Tech Starts///////////////////////////////////
-    app.use('/rymtech', express.static(path.join(__dirname, 'ryum tech')));
-    app.use(express.static(__dirname + '/ryum tech'))
+    app.use('/rymtech', express.static(path.join(__dirname, 'rynumtech')));
+    app.use(express.static(__dirname + '/rynumtech'))
     app.get('/rymtech', (req, res) => {
-        res.sendFile(path.join(__dirname, 'ryum tech', 'index.html'));
+        res.sendFile(path.join(__dirname, 'rynumtech', 'index.html'));
     });
 
     ///////////////////////////////////////Extras///////////////////////////////////////
@@ -647,7 +693,8 @@ getOrigins().then((originList) => {
     // }
     // console.log("List of Routes and Methods:", listRoutes(app));
 
-    server.listen(port, localAddress.setAddress(), () => {
-        console.log(`Server is running on http://${localAddress.setAddress()}:${port}`);
+    server.listen(port, () => {
+        // console.log(`Server is running on http://${localAddress.setAddress()}:${port}`);
+        console.log(`Server is running on http://localhost:${port}`);
     });
 });

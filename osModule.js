@@ -17,4 +17,5 @@ const localAddress = {
         }
     }
 }
+console.log(localAddress.setAddress())
 module.exports = localAddress;
