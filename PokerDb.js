@@ -9,7 +9,7 @@ const mongo_password = encodeURIComponent(MONGO_PASS);
 const uri = `mongodb+srv://apurve2014:${mongo_password}@chatsuport.suprwbc.mongodb.net/?retryWrites=true&w=majority&appName=chatSuport`;
 const client = new MongoClient(uri);
 
-async function newConnection() {
+async function newConnection_for_users() {
     try {
         const client = new MongoClient(uri);
         await client.connect
@@ -20,25 +20,29 @@ async function newConnection() {
         console.log("error in new connection : ", err);
     }
 }
-async function Login_Check(obj) {
+async function Poker_Login_Check(obj) {
     try {
         //Here I will create new type of session Id to send
         const { email, password, sessionId } = obj;
-        const { collection, client } = await newConnection();
+        const { collection, client } = await newConnection_for_users();
         let user = await collection.findOneAndUpdate(
             {
-                'Email': email,
-                'Password': password
+                $or: [
+                    { 'email': email },
+                    { 'username': email }
+                ],
+                'password': password
             },
-            { $set: { sessionId: sessionId } },
+            { $set: { 'sessionId': sessionId } },
             {
                 returnDocument: 'after', // Return updated document
-                projection: { _id: 1, sessionId: 0 } // Return only _id and sessionId
+                projection: { '_id': 0, 'username': 1 } // Return only _id and sessionId
             }
         );
         client.close();
         if (user) {
-            return user._id.toString();
+            console.log("get user for chek if username is there : ", user);
+            return user.username;
         } else {
             return false;
         }
@@ -47,24 +51,34 @@ async function Login_Check(obj) {
     }
 }
 
-async function signup_user(newUser) {
-    const { collection, client } = await newConnection();
+async function Poker_signup_user(newUser) {
+    const { collection, client } = await newConnection_for_users();
     let result = await collection.updateOne(
-        { Email: newUser.Email },
+        {
+            $or: [
+                { email: newUser.email },
+                { username: newUser.email }
+            ]
+        },
         { $setOnInsert: newUser },
         { upsert: true }
     );
+
     client.close();
+
     if (result.upsertedCount === 1) {
-        const userFolderPath = join(__dirname, "Tute", result.upsertedId.toString());
-        mkdir(userFolderPath, (err) => {
-            if (err) {
-                return console.error('Error creating directory:', err);
-            }
-        });
-        return result.upsertedId.toString();
+        return true;  // new record inserted
     } else {
-        return false;
+        return false; // record already existed
     }
 }
-module.exports = { Login_Check, signup_user }
+let newUser = { 'username': "apurvd", 'email': '1ssdfaps@gmai.on', 'password': encrypt('asdad') }
+Poker_signup_user(newUser)
+    .then(data => {
+        console.log("Test Insertion Poker_signup_user:", data);
+    })
+    .catch(err => {
+        console.error("Error in Poker_signup_user:", err);
+    });
+
+module.exports = { Poker_Login_Check, Poker_signup_user }

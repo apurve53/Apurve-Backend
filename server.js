@@ -108,18 +108,19 @@ getOrigins().then((originList) => {
     // res.redirect('http://localhost:5173/');
     // })
     //Poker Server ///////////////////////////////////////////////////////////////////////////////
-    const { Login_Check } = require('./PokerDb.js');
+    const { Poker_Login_Check, Poker_signup_user } = require('./PokerDb.js');
     app.post("/poker_login", async (req, res) => {
+        console.log("login Route");
         try {
             const { email, password } = req.body;
             if (req.session.userDetails.authanticated === false) {
-                const userStatus = await Login_Check({ email, password });
+                const userStatus = await Poker_Login_Check({ email, password });
                 if (!userStatus.user) {
                     res.status(402);
                 } else {
                     let encUserName = encrypt(username);
-                    req.session.userDetails = { authanticated: true, applications: ["supportchat"], user: encUserName };
-                    res.status(200).json({ user: encUserName });
+                    req.session.userDetails = { authanticated: true, applications: ["poker"], user: encUserName };
+                    res.status(200).send("signup");
                 }
             } else {
                 res.status(400).end();
@@ -128,6 +129,27 @@ getOrigins().then((originList) => {
             console.log("err : ", err);
         }
 
+    })
+    app.post('/poker_signup', async (req, res) => {
+        console.log("signup Route")
+        const { username, email, password } = req.body;
+        try {
+            // const hashedPassword = await bcrypt.hash(password, 10);
+            let insertion = await Poker_signup_user({ 'username': username, "email": email, 'password': password })
+            console.log("what is the type of return of db: ", insertion);
+            if (insertion) {
+                req.session.userDetails.authanticated = true;
+                req.session.userDetails.applications.push("poker_app");
+                //SEnd A token
+                //Sending user i encrypt form.
+                res.status(201).send(encrypt(username));
+            } else {
+                res.status(500).end();
+            }
+        } catch (error) {
+            console.log("Error while Signup user of Desktop app : ", error);
+            res.status(500).send(false);
+        }
     })
     app.post('/getdimention', (req, res) => {
         console.log("this is ")
