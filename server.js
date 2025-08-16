@@ -108,16 +108,25 @@ getOrigins().then((originList) => {
     // res.redirect('http://localhost:5173/');
     // })
     //Poker Server ///////////////////////////////////////////////////////////////////////////////
-    const { Poker_Login_Check, Poker_signup_user } = require('./PokerDb.js');
+    function requireAuth(req, res, next) {
+        if (req.session?.userDetails?.authanticated === true) {
+            // User is authenticated, continue to next handler
+            return next();
+        }
+        // Not authenticated → block access
+        res.status(401).json({ success: false, message: "Unauthorized. Please login first." });
+    }
+    const { Poker_Login_Check, Poker_signup_user, delete_poker_user } = require('./PokerDb.js');
     app.post("/poker_login", async (req, res) => {
-        console.log("login Route");
         try {
             const { email, password } = req.body;
             if (req.session.userDetails.authanticated === false) {
                 const userStatus = await Poker_Login_Check({ email, password });
-                if (!userStatus.user) {
+                if (!userStatus) {
                     res.status(402);
                 } else {
+
+                    req.session.userDetails.user = encrypt(userStatus);
                     let encUserName = encrypt(username);
                     req.session.userDetails = { authanticated: true, applications: ["poker"], user: encUserName };
                     res.status(200).send("signup");
@@ -128,17 +137,16 @@ getOrigins().then((originList) => {
         } catch (err) {
             console.log("err : ", err);
         }
-
     })
     app.post('/poker_signup', async (req, res) => {
-        console.log("signup Route")
         const { username, email, password } = req.body;
+        console.log("poker Sign up", username);
         try {
             // const hashedPassword = await bcrypt.hash(password, 10);
             let insertion = await Poker_signup_user({ 'username': username, "email": email, 'password': password })
-            console.log("what is the type of return of db: ", insertion);
             if (insertion) {
                 req.session.userDetails.authanticated = true;
+                req.session.userDetails.user = encrypt(username);
                 req.session.userDetails.applications.push("poker_app");
                 //SEnd A token
                 //Sending user i encrypt form.
@@ -151,6 +159,28 @@ getOrigins().then((originList) => {
             res.status(500).send(false);
         }
     })
+
+
+    app.post("/poker_delete_user", requireAuth, async (req, res) => {
+        try {
+            const username = decrypt(req.session.userDetails.user);
+            if (await delete_poker_user(username)) {
+                res.status(200).json({
+                    success: true,
+                    message: "User account deleted successfully"
+                });
+            };
+        } catch (err) {
+            console.log("error in dseleting user : ", err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            })
+        }
+    })
+
+
+
     app.post('/getdimention', (req, res) => {
         console.log("this is ")
         console.log("dimentions : ", req.body);

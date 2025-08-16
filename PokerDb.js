@@ -4,7 +4,7 @@ const {
     MONGO_PASS,
     ORIGENS_ID
 } = process.env;
-const { MongoClient, ObjectId } = require('mongodb');
+const { MongoClient, ObjectId, Collection } = require('mongodb');
 const mongo_password = encodeURIComponent(MONGO_PASS);
 const uri = `mongodb+srv://apurve2014:${mongo_password}@chatsuport.suprwbc.mongodb.net/?retryWrites=true&w=majority&appName=chatSuport`;
 const client = new MongoClient(uri);
@@ -72,13 +72,43 @@ async function Poker_signup_user(newUser) {
         return false; // record already existed
     }
 }
-let newUser = { 'username': "apurvd", 'email': '1ssdfaps@gmai.on', 'password': encrypt('asdad') }
-Poker_signup_user(newUser)
-    .then(data => {
-        console.log("Test Insertion Poker_signup_user:", data);
-    })
-    .catch(err => {
-        console.error("Error in Poker_signup_user:", err);
-    });
 
-module.exports = { Poker_Login_Check, Poker_signup_user }
+async function delete_poker_user(username) {
+    try {
+        const { collection, client } = await newConnection_for_users();
+        const result = await collection.deleteOne({ 'username': username })
+        if (result.deletedCount === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    catch (err) {
+        console.log("Error in Deleting User");
+        return false;
+    }
+    finally {
+        await client.close();
+    }
+}
+let newUser = { 'username': "apurvd", 'email': '1ssdfaps@gmai.on', 'password': encrypt('asdad') }
+
+//Sign Up is Working.
+// Poker_signup_user(newUser)
+//     .then(data => {
+//         console.log("Test Insertion Poker_signup_user:", data);
+//     })
+//     .catch(err => {
+//         console.error("Error in Poker_signup_user:", err);
+//     });
+
+async function deleteAllUsers() {
+    const { collection, client } = await newConnection_for_users();
+    const deleting = await collection.deleteMany({});
+    console.log(deleting);
+    client.close()
+}
+
+deleteAllUsers();
+
+module.exports = { Poker_Login_Check, Poker_signup_user, delete_poker_user }
