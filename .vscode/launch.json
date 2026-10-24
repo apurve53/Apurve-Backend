@@ -1,8 +1,19 @@
 {
     "configurations": [
+
+
         {
             "name": "Test Server Launch ",
-            "program": "${workspaceFolder}/testServer.js",
+            "program": "${workspaceFolder}/server.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+		{
+            "name": "DB Launch ",
+            "program": "${workspaceFolder}/db.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
