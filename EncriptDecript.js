@@ -15,6 +15,6 @@ function decrypt(hash) {
 	return decrypted.toString();
 }
 
-// console.log(encrypt("this is pass"));
+// console.log(encrypt("username"));
 // console.log(decrypt('868db3c1a5e2722e901587e0dfe998b8a0d5887e'));
 module.exports = { encrypt, decrypt };

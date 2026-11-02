@@ -12,7 +12,9 @@ const mongo_password = encodeURIComponent(MONGO_PASS);
 const uri = `mongodb+srv://apurve2014:${mongo_password}@chatsuport.suprwbc.mongodb.net/?retryWrites=true&w=majority&appName=chatSuport`;
 const client = new MongoClient(uri);
 
+
 async function insertUser(user) {
+	user.password = await bcrypt.hash(user.password, 10);
 	try {
 		await client.connect();
 	} catch (error) {
@@ -35,6 +37,16 @@ async function insertUser(user) {
 		return insertion.acknowledged;
 	}
 }
+// Inserting a new User Manualy..////
+// insertUser({
+// 	'name': 'username',
+// 	'password': 'hashedPassword',
+// 	'chat': {},
+// 	"website": 'https://wise-raccoon-cv4bb4-dev-ed.trailblaze.live-preview.salesforce-experience.com',
+// 	"chatConnections": []
+// }).then((data) => {
+// 	console.log(' User Inseerted ::', data);
+// }).catch(error => console.log('error in inserting User ::', error));
 
 async function changeChatAppPassword(userName, password) {
 	await client.connect();

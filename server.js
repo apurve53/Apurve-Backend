@@ -33,7 +33,8 @@ function runWorker(a, b) {
 
 getOrigins().then((originList) => {
 	originList.unshift("https://pwmnfcn7-3000.inc1.devtunnels.ms/chatadminhome");
-	originList.unshift('https://wise-raccoon-cv4bb4-dev-ed.trailblaze.builder.salesforce-experience.com/');
+	originList.unshift('https://wise-raccoon-cv4bb4-dev-ed.trailblaze.builder.salesforce-experience.com');
+	originList.unshift('https://wise-raccoon-cv4bb4-dev-ed.trailblaze.live-preview.salesforce-experience.com');
 	// originList.unshift("https://localhost:5173");
 	originList.unshift("http://localhost:5173");
 	originList.unshift(" http://localhost:5174");
@@ -69,36 +70,36 @@ getOrigins().then((originList) => {
 	// const filesURL = urlFiles.getAllFilesUrls();
 
 	// This is Importent Thing not to be deleted
-	// app.use((req, res, next) => {
-	// 	// console.log("sub Domain Middleware");
-	// 	const subdomain = req.hostname.split('.')[0]; // e.g. "apurve" from apurve.worlddevelopment.in
-	// 	if (subdomain === 'worlddevelopment' || req.hostname === 'worlddevelopment.in') {
-	// 		req.subdomain = null; // root domain
-	// 	} else {
-	// 		req.subdomain = subdomain;
-	// 	}
-	// 	next();
-	// });
-	// app.use((req, res, next) => {
-	// 	// rynumtech.png ka url aata ahi to console kara kar dekho ki kitni baar aata hai logs me. 
-	// 	const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-	// 	console.log('Log middleware =>>');
+	app.use((req, res, next) => {
+		console.log("sub Domain Middleware");
+		// 	const subdomain = req.hostname.split('.')[0]; // e.g. "apurve" from apurve.worlddevelopment.in
+		// 	if (subdomain === 'worlddevelopment' || req.hostname === 'worlddevelopment.in') {
+		// 		req.subdomain = null; // root domain
+		// 	} else {
+		// 		req.subdomain = subdomain;
+		// 	}
+		next();
+	});
+	app.use((req, res, next) => {
+		// rynumtech.png ka url aata ahi to console kara kar dekho ki kitni baar aata hai logs me. 
+		const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+		console.log('Log middleware =>>');
 
-	// 	const logData = `
-	//     ==================== New Request ====================
-	//     📅 Timestamp: ${new Date().toISOString()}
-	//     🌐 IP Address: ${ip}
-	//     🔗 Hostname: ${req.hostname}
-	//     🧭 Requested URL: ${req.url}
-	//     📬 HTTP Method: ${req.method}
-	//     📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
-	//     🧠 User-Agent: ${req.get('User-Agent')}
-	//     📦 Headers:
-	//     =====================================================
-	//     `;
-	// 	// appendFileSync(logFilePath, logData, 'utf8');
-	// 	next();
-	// });
+		const logData = `
+	    ==================== New Request ====================
+	    📅 Timestamp: ${new Date().toISOString()}
+	    🌐 IP Address: ${ip}
+	    🔗 Hostname: ${req.hostname}
+	    🧭 Requested URL: ${req.url}
+	    📬 HTTP Method: ${req.method}
+	    📝 Referrer: ${req.get('Referrer') || req.get('Referer') || 'N/A'}
+	    🧠 User-Agent: ${req.get('User-Agent')}
+	    📦 Headers:
+	    =====================================================
+	    `;
+		appendFileSync(logFilePath, logData, 'utf8');
+		next();
+	});
 	/////////////////////////////////////////// These are basic APIs Starts ///////////////////////////////////////
 	app.use(express.static(__dirname + '/dist'));
 	app.use(express.static(__dirname + '/supportChatPublic'));
@@ -106,11 +107,19 @@ getOrigins().then((originList) => {
 	app.use(express.static(__dirname + '/otherPages'))
 	app.use(express.static(__dirname + '/baseFiles'))
 
-
+	////////////////////////////////// Base Route //////////////////////////////
+	// app.get('/', (req, res) => {
+	// 	console.log('Redirecting to React =>>');
+	// 	res.render('http://localhost:5173/');
+	// })
+	// app.use(express.static(__dirname + '/public'))
 	app.get('/', (req, res) => {
-		console.log('Redirecting to React =>>');
-		res.redirect('http://localhost:5173/');
-	})
+		res.sendFile(path.join(__dirname, 'shot.html'));
+	});
+	app.get('/salesforceScript', (req, res) => {
+		res.sendFile(path.join(__dirname, 'public', 'salesforceScript.js'));
+	});
+	///////////////////////////////// Base Route ////////////////////////////////
 
 	app.post('/getdimention', (req, res) => {
 		console.log("this is ")
@@ -121,16 +130,17 @@ getOrigins().then((originList) => {
 		console.log('sesstion checking =>>');
 		try {
 			if (!req.session.userDetails) {
-				console.log('Creating Sesstion =>>');
 				req.session.userDetails = { authanticated: false, applications: [], user: "new user" };
 				console.log('User Sesstion :: ', req.session);
 				res.status(200).json({ "working": "session is created" });
-			} else if (req.session.userDetails.authanticated === true && req.session.userDetails.applications.includes('Desktop_App')) {
-				res.status(200).send(true);
-			} else if (req.session.userDetails.authanticated === true) {
-				res.status(200).json({ user: req.session.userDetails.user });
 			} else {
-				res.status(200).json({});
+				if (req.session.userDetails.authanticated === true && req.session.userDetails.applications.includes('Desktop_App')) {
+					res.status(200).send(true);
+				} else if (req.session.userDetails.authanticated === true) {
+					res.status(200).json({ user: req.session.userDetails.user });
+				} else {
+					res.status(200).json({});
+				}
 			}
 		} catch (error) {
 			console.log('error in session check ::', error);
@@ -147,8 +157,8 @@ getOrigins().then((originList) => {
 			if (await checkUser(username)) {
 				return res.status(400).send("User is already Exist");
 			}
-			const hashedPassword = await bcrypt.hash(password, 10);
-			console.log('Sign up password ::', hashedPassword);
+			// const hashedPassword = await bcrypt.hash(password, 10);
+			// console.log('Sign up password ::', hashedPassword);
 
 			// website = website === "" ? "https://worlddevelopment.in" : website;
 			let insertion = await insertUser({ name, username, 'password': hashedPassword, 'chat': {}, "website": website, "chatConnections": [] })
@@ -241,17 +251,22 @@ getOrigins().then((originList) => {
 	})
 
 	app.post('/userchat', async (req, res) => {
+		console.log('user chat rout 12');
+
 		let userSession = req.session.clientDetail;
+		console.log('Session :: ', req.session);
 		try {
 			if (req.body.user || userSession?.user) {
-				let hashedUser = req.body.user ? req.body.user : userSession.user;
-				let userchat = await getUserChat({ user: decrypt(hashedUser) });
+				let encryptedUser = req.body.user ? req.body.user : userSession.user;
+				let userchat = await getUserChat({ user: decrypt(encryptedUser) });
 				res.setHeader("Content-type", "application/json");
 				if (Object.keys(userchat).length > 0) {
 					res.status(200).json(userchat);
 				} else {
 					res.status(200).json({});
 				}
+			} else {
+				res.status(401).send('Unauthorized: Access is denied.');
 			}
 		} catch (e) {
 			console.log("Error while sending response for asking user chat : ", e);
